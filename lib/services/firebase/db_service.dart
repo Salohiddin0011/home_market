@@ -14,24 +14,24 @@ sealed class DBService {
 
   /// post
   static Future<bool> storePost(
-      String title,
-      String content,
-      bool isPublic,
-      File file,
-      bool carPark,
-      bool swimming,
-      bool gym,
-      bool restaurant,
-      bool wifi,
-      bool petCenter,
-      bool medicalCentre,
-      bool school,
-      String area,
-      String bathrooms,
-      bool isApartment,
-      String phone,
-      String price,
-      String rooms) async {
+      {required String title,
+      required String content,
+      required bool isPublic,
+      required File file,
+      required bool carPark,
+      required bool swimming,
+      required bool gym,
+      required bool restaurant,
+      required bool wifi,
+      required bool petCenter,
+      required bool medicalCentre,
+      required bool school,
+      required String area,
+      required String bathrooms,
+      required bool isApartment,
+      required String phone,
+      required String price,
+      required String rooms}) async {
     try {
       final folder = db.ref(Folder.post);
       final child = folder.push();
@@ -90,11 +90,47 @@ sealed class DBService {
   }
 
   static Future<bool> updatePost(
-      String postId, String title, String content, bool isPublic) async {
+      {required String postId,
+      required String title,
+      required String content,
+      required bool isPublic,
+      required File file,
+      required bool carPark,
+      required bool swimming,
+      required bool gym,
+      required bool restaurant,
+      required bool wifi,
+      required bool petCenter,
+      required bool medicalCentre,
+      required bool school,
+      required String area,
+      required String bathrooms,
+      required bool isApartment,
+      required String phone,
+      required String price,
+      required String rooms}) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
-      await fbPost
-          .update({"title": title, "content": content, "isPublic": isPublic});
+      await fbPost.update({
+        "title": title,
+        "content": content,
+        "isPublic": isPublic,
+        "file": file,
+        "carPark": carPark,
+        "swimming": swimming,
+        "gym": gym,
+        "restaurant": restaurant,
+        "wifi": wifi,
+        "petCenter": petCenter,
+        "medicalCentre": medicalCentre,
+        "school": school,
+        "area": area,
+        "bathrooms": bathrooms,
+        "isApartment": isApartment,
+        "phone": phone,
+        "price": price,
+        "rooms": rooms,
+      });
 
       // fbPost.set(post.toJson());
       return true;
@@ -127,23 +163,6 @@ sealed class DBService {
               .where((element) => element.userId == AuthService.user.uid)
               .toList();
       }
-    } catch (e) {
-      debugPrint("ERROR: $e");
-      return [];
-    }
-  }
-
-  static Future<List<Post>> publicPost([bool isPublic = true]) async {
-    try {
-      final folder = db.ref(Folder.post);
-      final event =
-          await folder.orderByChild("isPublic").equalTo(isPublic).once();
-      final json = jsonDecode(jsonEncode(event.snapshot.value)) as Map;
-      debugPrint("JSON: $json");
-      return json.values
-          .map((e) => Post.fromJson(e as Map<String, Object?>,
-              isMe: e["userId"] == AuthService.user.uid))
-          .toList();
     } catch (e) {
       debugPrint("ERROR: $e");
       return [];

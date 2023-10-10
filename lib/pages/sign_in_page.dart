@@ -98,12 +98,10 @@ class SignInPage extends StatelessWidget {
                             backgroundColor: AppColors.ff016FFF,
                           ),
                           onPressed: () {
-                            context.read<AuthBloc>().add(SignUpEvent(
-                                username: nameController.text.trim(),
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim(),
-                                prePassword:
-                                    prePasswordController.text.trim()));
+                            context.read<AuthBloc>().add(SignInEvent(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                ));
                           },
                           child: Text(
                             I18N.signin,
