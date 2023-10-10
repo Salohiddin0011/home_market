@@ -16,11 +16,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<UpdatePostEvent>(_updatePost);
     on<ViewImagePostEvent>(_viewImage);
     on<WriteCommentPostEvent>(_writeComment);
+    on<ViewGridImagesPostEvent>(_viewGridImages);
   }
 
   void _createPost(CreatePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.storePost(
+        gridImages: event.gridImages,
         title: event.title,
         content: event.content,
         isPublic: event.isPublic,
@@ -54,6 +56,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     emit(ViewImagePostSuccess(event.file));
   }
 
+  void _viewGridImages(ViewGridImagesPostEvent event, Emitter emit) {
+    emit(ViewGridImagesPostSuccess(event.files));
+  }
+
   void _deletePost(DeletePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.deletePost(event.postId);
@@ -68,6 +74,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   void _updatePost(UpdatePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.updatePost(
+      gridImages: event.gridImages,
       postId: event.postId,
       title: event.title,
       content: event.content,

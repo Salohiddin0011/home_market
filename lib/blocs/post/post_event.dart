@@ -23,27 +23,28 @@ class CreatePostEvent extends PostEvent {
   final String phone;
   final String price;
   final String rooms;
+  final List<File?> gridImages;
 
-  const CreatePostEvent({
-    required this.title,
-    required this.content,
-    required this.isPublic,
-    required this.file,
-    required this.carPark,
-    required this.swimming,
-    required this.gym,
-    required this.restaurant,
-    required this.wifi,
-    required this.petCenter,
-    required this.medicalCentre,
-    required this.school,
-    required this.area,
-    required this.bathrooms,
-    required this.isApartment,
-    required this.phone,
-    required this.price,
-    required this.rooms,
-  });
+  const CreatePostEvent(
+      {required this.title,
+      required this.content,
+      required this.isPublic,
+      required this.file,
+      required this.carPark,
+      required this.swimming,
+      required this.gym,
+      required this.restaurant,
+      required this.wifi,
+      required this.petCenter,
+      required this.medicalCentre,
+      required this.school,
+      required this.area,
+      required this.bathrooms,
+      required this.isApartment,
+      required this.phone,
+      required this.price,
+      required this.rooms,
+      required this.gridImages});
 
   @override
   List<Object?> get props => [
@@ -65,6 +66,7 @@ class CreatePostEvent extends PostEvent {
         phone,
         price,
         rooms,
+        gridImages
       ];
 }
 
@@ -104,7 +106,7 @@ class UpdatePostEvent extends PostEvent {
   final String phone;
   final String price;
   final String rooms;
-
+  final List<File?> gridImages;
   const UpdatePostEvent(
       {required this.title,
       required this.content,
@@ -124,7 +126,8 @@ class UpdatePostEvent extends PostEvent {
       required this.phone,
       required this.price,
       required this.rooms,
-      required this.postId});
+      required this.postId,
+      required this.gridImages});
 
   @override
   List<Object?> get props => [
@@ -146,7 +149,8 @@ class UpdatePostEvent extends PostEvent {
         phone,
         price,
         rooms,
-        postId
+        postId,
+        gridImages
       ];
 }
 
@@ -156,6 +160,14 @@ class ViewImagePostEvent extends PostEvent {
 
   @override
   List<Object?> get props => [file];
+}
+
+class ViewGridImagesPostEvent extends PostEvent {
+  final List<File?> files;
+  const ViewGridImagesPostEvent(this.files);
+
+  @override
+  List<Object?> get props => [files];
 }
 
 class WriteCommentPostEvent extends PostEvent {

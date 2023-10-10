@@ -15,4 +15,7 @@ sealed class I18N {
   static const cancel = "Cancel";
   static const home = "Home";
   static const market = "Market";
+  static const letsFind = "Let’s Find your\n";
+  static const favHome = "Favorite Home";
+  static const poppins = "Poppins";
 }

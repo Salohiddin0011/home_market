@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:home_market/models/message_model.dart';
 
 class Post {
@@ -6,6 +8,7 @@ class Post {
   final String content;
   final String userId;
   final String imageUrl;
+  List<File?> gridImages;
   final bool isPublic;
   final String phone;
   final String email;
@@ -53,10 +56,12 @@ class Post {
       required this.isApartment,
       required this.phone,
       required this.price,
-      required this.rooms});
+      required this.rooms,
+      required this.gridImages});
 
   factory Post.fromJson(Map<String, Object?> json, {bool isMe = false}) {
     return Post(
+      gridImages: (json['gridImages'] as List).map((e) => e as File).toList(),
       id: json['id'] as String,
       title: json['title'] as String,
       content: json['content'] as String,

@@ -55,6 +55,15 @@ class ViewImagePostSuccess extends PostState {
   List<Object> get props => [file];
 }
 
+class ViewGridImagesPostSuccess extends PostState {
+  final List<File?> files;
+
+  const ViewGridImagesPostSuccess(this.files);
+
+  @override
+  List<Object> get props => [files];
+}
+
 class WriteCommentPostSuccess extends PostState {
   const WriteCommentPostSuccess();
 

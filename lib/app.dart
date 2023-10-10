@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
+import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
@@ -20,6 +21,7 @@ class HomeMarketApp extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (_) => AuthBloc()),
         BlocProvider<MainBloc>(create: (_) => MainBloc()),
         BlocProvider<PostBloc>(create: (_) => PostBloc()),
+        BlocProvider<LandingPageBloc>(create: (_) => LandingPageBloc()),
       ],
       child: ValueListenableBuilder(
           valueListenable: hiveDb.getListenable,

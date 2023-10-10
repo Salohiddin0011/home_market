@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
 import 'package:home_market/main.dart';
+import 'package:home_market/pages/home_page.dart';
 import 'package:home_market/pages/sign_up_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
@@ -21,6 +22,7 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
@@ -28,9 +30,9 @@ class SignInPage extends StatelessWidget {
                 .showSnackBar(SnackBar(content: Text(state.message)));
           }
 
-          if (state is SignUpSuccess) {
+          if (state is SignInSuccess) {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => SignInPage()));
+                MaterialPageRoute(builder: (context) => HomePage()));
           }
         },
         child: Stack(

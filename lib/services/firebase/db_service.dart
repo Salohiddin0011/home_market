@@ -31,7 +31,8 @@ sealed class DBService {
       required bool isApartment,
       required String phone,
       required String price,
-      required String rooms}) async {
+      required String rooms,
+      required List<File?> gridImages}) async {
     try {
       final folder = db.ref(Folder.post);
       final child = folder.push();
@@ -39,6 +40,7 @@ sealed class DBService {
       final userId = AuthService.user.uid;
       final imageUrl = await StoreService.uploadFile(file);
       final post = Post(
+          gridImages: gridImages,
           carPark: carPark,
           swimming: swimming,
           gym: gym,
@@ -108,7 +110,8 @@ sealed class DBService {
       required bool isApartment,
       required String phone,
       required String price,
-      required String rooms}) async {
+      required String rooms,
+      required List<File?> gridImages}) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
       await fbPost.update({
@@ -130,6 +133,7 @@ sealed class DBService {
         "phone": phone,
         "price": price,
         "rooms": rooms,
+        "gridImages": gridImages,
       });
 
       // fbPost.set(post.toJson());
