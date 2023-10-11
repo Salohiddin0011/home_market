@@ -8,7 +8,7 @@ class Post {
   final String content;
   final String userId;
   final String imageUrl;
-  List<File?> gridImages;
+  List<String> gridImages;
   final bool isPublic;
   final String phone;
   final String email;
@@ -61,7 +61,7 @@ class Post {
 
   factory Post.fromJson(Map<String, Object?> json, {bool isMe = false}) {
     return Post(
-      gridImages: (json['gridImages'] as List).map((e) => e as File).toList(),
+      gridImages: (json['gridImages'] as List).map((e) => e as String).toList(),
       id: json['id'] as String,
       title: json['title'] as String,
       content: json['content'] as String,
@@ -93,6 +93,7 @@ class Post {
   }
 
   Map<String, Object?> toJson() => {
+        "gridImages": gridImages,
         "id": id,
         "title": title,
         "content": content,
