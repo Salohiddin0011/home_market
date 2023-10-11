@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 
+// ignore: must_be_immutable
 class BottomAppBarItem extends StatelessWidget {
   final String icon;
 

@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '561734449423',
     projectId: 'home-market-9a104',
     authDomain: 'home-market-9a104.firebaseapp.com',
+    databaseURL: 'https://home-market-9a104-default-rtdb.firebaseio.com',
     storageBucket: 'home-market-9a104.appspot.com',
     measurementId: 'G-9MPHXB2F6M',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:561734449423:android:39b88f285e56b25705e67a',
     messagingSenderId: '561734449423',
     projectId: 'home-market-9a104',
+    databaseURL: 'https://home-market-9a104-default-rtdb.firebaseio.com',
     storageBucket: 'home-market-9a104.appspot.com',
   );
 
@@ -66,6 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:561734449423:ios:cf2a3350364e3fd205e67a',
     messagingSenderId: '561734449423',
     projectId: 'home-market-9a104',
+    databaseURL: 'https://home-market-9a104-default-rtdb.firebaseio.com',
     storageBucket: 'home-market-9a104.appspot.com',
     iosBundleId: 'com.example.homeMarket',
   );
@@ -75,6 +78,7 @@ class DefaultFirebaseOptions {
     appId: '1:561734449423:ios:79f925b35a6ec19d05e67a',
     messagingSenderId: '561734449423',
     projectId: 'home-market-9a104',
+    databaseURL: 'https://home-market-9a104-default-rtdb.firebaseio.com',
     storageBucket: 'home-market-9a104.appspot.com',
     iosBundleId: 'com.example.homeMarket.RunnerTests',
   );

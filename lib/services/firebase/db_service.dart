@@ -34,13 +34,25 @@ sealed class DBService {
       required String rooms,
       required List<File?> gridImages}) async {
     try {
+      print("try");
       final folder = db.ref(Folder.post);
+      print("try1");
       final child = folder.push();
+      print("try2");
       final id = child.key!;
+      print("try3");
       final userId = AuthService.user.uid;
+      print("try4");
       final imageUrl = await StoreService.uploadFile(file);
+      print("try5");
+      List<String> images = [];
+      for (var i = 0; i < gridImages.length; i++) {
+        final image = await StoreService.uploadFile(gridImages[i]!);
+        images.add(image);
+      }
+      print("for");
       final post = Post(
-          gridImages: gridImages,
+          gridImages: images,
           carPark: carPark,
           swimming: swimming,
           gym: gym,
@@ -65,6 +77,7 @@ sealed class DBService {
           price: price,
           rooms: rooms);
       await child.set(post.toJson());
+      print("created");
       return true;
     } catch (e) {
       debugPrint("DB ERROR: $e");

@@ -117,11 +117,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      onDrawerChanged: (value) {
-        if (value) {
-          context.read<AuthBloc>().add(const GetUserEvent());
-        }
-      },
       appBar: AppBar(
         toolbarHeight: 100.sp,
         centerTitle: false,

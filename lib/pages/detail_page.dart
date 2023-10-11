@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/models/post_model.dart';
-import 'package:home_market/views/custom_txt_field.dart';
 import 'package:home_market/views/detail_txt.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -85,102 +84,114 @@ class _DetailPageState extends State<DetailPage> {
             isPublic = state.isPublic;
           }
         },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: getImage,
-                  child: BlocBuilder<PostBloc, PostState>(
-                    buildWhen: (previous, current) =>
-                        current is ViewImagePostSuccess,
-                    builder: (context, state) {
-                      return Card(
-                        child: SizedBox(
-                          height: MediaQuery.sizeOf(context).width - 40,
-                          width: MediaQuery.sizeOf(context).width,
-                          child: file == null
-                              ? const Icon(
-                                  Icons.add,
-                                  size: 175,
-                                )
-                              : Image.file(
-                                  file!,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 30),
-                CustomDetailTextField(
-                    controller: titleController, title: "Title"),
-                CustomDetailTextField(
-                    controller: contentController, title: "Content"),
-                Row(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    BlocSelector<PostBloc, PostState, bool>(
-                      selector: (state) {
-                        if (state is PostIsPublicState) return state.isPublic;
-
-                        return isPublic;
-                      },
-                      builder: (context, value) {
-                        return Checkbox(
-                            value: value,
-                            onChanged: (value) {
-                              context
-                                  .read<PostBloc>()
-                                  .add(PostIsPublicEvent(value!));
-                            });
-                      },
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      "Do you want to make your post public?",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-                BlocBuilder<PostBloc, PostState>(
-                    buildWhen: (previous, current) =>
-                        current is ViewGridImagesPostSuccess,
-                    builder: (context, state) {
-                      return GestureDetector(
-                        onTap: getMultiImage,
-                        child: files.isEmpty
-                            ? Container(
-                                height: 150,
-                                width: 150,
-                                color: Colors.black,
-                              )
-                            : GridView.builder(
-                                shrinkWrap: true,
-                                itemCount: files.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2),
-                                itemBuilder: (context, i) {
-                                  return Card(
-                                    child: Image.file(
-                                      files[i]!,
+                    GestureDetector(
+                      onTap: getImage,
+                      child: BlocBuilder<PostBloc, PostState>(
+                        buildWhen: (previous, current) =>
+                            current is ViewImagePostSuccess,
+                        builder: (context, state) {
+                          return Card(
+                            child: SizedBox(
+                              height: MediaQuery.sizeOf(context).width - 40,
+                              width: MediaQuery.sizeOf(context).width,
+                              child: file == null
+                                  ? const Icon(
+                                      Icons.add,
+                                      size: 175,
+                                    )
+                                  : Image.file(
+                                      file!,
                                       fit: BoxFit.cover,
                                     ),
-                                  );
-                                },
-                              ),
-                      );
-                    })
-              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    CustomDetailTextField(
+                        controller: titleController, title: "Title"),
+                    CustomDetailTextField(
+                        controller: contentController, title: "Content"),
+                    Row(
+                      children: [
+                        BlocSelector<PostBloc, PostState, bool>(
+                          selector: (state) {
+                            if (state is PostIsPublicState)
+                              return state.isPublic;
+
+                            return isPublic;
+                          },
+                          builder: (context, value) {
+                            return Checkbox(
+                                value: value,
+                                onChanged: (value) {
+                                  context
+                                      .read<PostBloc>()
+                                      .add(PostIsPublicEvent(value!));
+                                });
+                          },
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Do you want to make your post public?",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                    BlocBuilder<PostBloc, PostState>(
+                        buildWhen: (previous, current) =>
+                            current is ViewGridImagesPostSuccess,
+                        builder: (context, state) {
+                          return GestureDetector(
+                            onTap: getMultiImage,
+                            child: files.isEmpty
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    color: Colors.black,
+                                  )
+                                : GridView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: files.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2),
+                                    itemBuilder: (context, i) {
+                                      return Card(
+                                        child: Image.file(
+                                          files[i]!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          );
+                        })
+                  ],
+                ),
+              ),
             ),
-          ),
+            if (context.read<PostBloc>().state is PostLoading)
+              BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              })
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (widget.post == null) {
+            print('create');
             context.read<PostBloc>().add(CreatePostEvent(
                 gridImages: files,
                 file: file!,
