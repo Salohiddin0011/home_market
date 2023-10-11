@@ -273,6 +273,15 @@ class _HomePageState extends State<HomePage> {
                       child: Card(
                         child: Column(
                           children: [
+                            Row(
+                              children: [
+                                for (int i = 0; i < post.gridImages.length; i++)
+                                  Image.network(
+                                    post.gridImages[i],
+                                    height: 50,
+                                  ),
+                              ],
+                            ),
                             Container(
                               color: Colors
                                   .primaries[index % Colors.primaries.length],
@@ -286,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                             ListTile(
                               title: Text(post.title),
                               subtitle: Text(post.content),
-                              trailing: post.isMe
+                              trailing: AuthService.user.uid == post.userId
                                   ? IconButton(
                                       onPressed: () {
                                         context

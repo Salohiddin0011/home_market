@@ -79,8 +79,8 @@ sealed class DBService {
       await child.set(post.toJson());
       print("created");
       return true;
-    } catch (e) {
-      debugPrint("DB ERROR: $e");
+    } catch (e, s) {
+      debugPrint("DB ERROR: $e $s");
       return false;
     }
   }
