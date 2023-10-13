@@ -10,6 +10,7 @@ import '../../services/constants/app_str.dart';
 import '../../views/profile_views/profile_button.dart';
 import '../../views/profile_views/user_name_email.dart';
 import '../detail_page.dart';
+import 'my_announcement.dart';
 import 'settings_page.dart';
 import '../sign_in_page.dart';
 
@@ -300,6 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Card(
                       elevation: 6,
                       shadowColor: Colors.blueGrey.shade300,
+                      color: AppColors.background,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -354,7 +356,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               Icons.web_stories_outlined,
                               size: 29.sp,
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MyAnnouncements(),
+                                ),
+                              );
+                            },
                           ),
                           Container(
                             width: double.infinity,

@@ -30,6 +30,15 @@ class _SettingsPageState extends State<SettingsPage> {
               fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppColors.ff000000,
+          ),
+        ),
       ),
       body: Column(
         children: [
