@@ -27,8 +27,8 @@ class HomeMarketApp extends StatelessWidget {
           valueListenable: hiveDb.getListenable,
           builder: (context, mode, child) {
             return MaterialApp(
-              theme: ThemeData.light(useMaterial3: true),
-              darkTheme: ThemeData.dark(useMaterial3: true),
+              theme: ThemeData.light(useMaterial3: false),
+              darkTheme: ThemeData.dark(useMaterial3: false),
               themeMode: hiveDb.mode,
               debugShowCheckedModeBanner: false,
               home: ScreenUtilInit(

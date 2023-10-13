@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:home_market/models/message_model.dart';
 
 class Post {

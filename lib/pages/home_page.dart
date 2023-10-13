@@ -15,6 +15,8 @@ import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/services/firebase/db_service.dart';
 import 'package:home_market/views/bottom_appbar_item.dart';
 
+import 'profile/profile_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -31,125 +33,56 @@ class _HomePageState extends State<HomePage> {
     context.read<MainBloc>().add(const GetAllDataEvent());
   }
 
-  void showWarningDialog(BuildContext ctx) {
-    final controller = TextEditingController();
-    showDialog(
-      context: ctx,
-      builder: (context) {
-        return BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is DeleteAccountSuccess) {
-              Navigator.of(context).pop();
-              if (ctx.mounted) {
-                Navigator.of(ctx).pushReplacement(
-                    MaterialPageRoute(builder: (context) => SignInPage()));
-              }
-            }
-
-            if (state is AuthFailure) {
-              Navigator.of(context).pop();
-              Navigator.of(ctx).pop();
-            }
-          },
-          builder: (context, state) {
-            return Stack(
-              children: [
-                AlertDialog(
-                  title: const Text(I18N.deleteAccount),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(state is DeleteConfirmSuccess
-                          ? I18N.requestPassword
-                          : I18N.deleteAccountWarning),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      if (state is DeleteConfirmSuccess)
-                        TextField(
-                          controller: controller,
-                          decoration:
-                              const InputDecoration(hintText: I18N.password),
-                        ),
-                    ],
-                  ),
-                  actionsAlignment: MainAxisAlignment.spaceBetween,
-                  actions: [
-                    /// #cancel
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(I18N.cancel),
-                    ),
-
-                    /// #confirm #delete
-                    ElevatedButton(
-                      onPressed: () {
-                        if (state is DeleteConfirmSuccess) {
-                          context
-                              .read<AuthBloc>()
-                              .add(DeleteAccountEvent(controller.text.trim()));
-                        } else {
-                          context
-                              .read<AuthBloc>()
-                              .add(const DeleteConfirmEvent());
-                        }
-                      },
-                      child: Text(state is DeleteConfirmSuccess
-                          ? I18N.delete
-                          : I18N.confirm),
-                    ),
-                  ],
-                ),
-                if (state is AuthLoading)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  )
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: .0,
         toolbarHeight: 100.sp,
         centerTitle: false,
         title: RichText(
-            text: TextSpan(
-          children: [
-            TextSpan(
-              text: I18N.letsFind,
-              style: TextStyle(
-                  fontSize: 20.sp,
-                  color: AppColors.ff8997A9,
-                  fontFamily: I18N.poppins,
-                  fontWeight: FontWeight.w400),
-            ),
-            TextSpan(
-              text: I18N.favHome,
-              style: TextStyle(
-                  fontSize: 25.sp,
-                  color: AppColors.ff122D4D,
-                  fontFamily: I18N.poppins,
-                  fontWeight: FontWeight.w700),
-            ),
-          ],
-        )),
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: I18N.letsFind,
+                style: TextStyle(
+                    fontSize: 20.sp,
+                    color: AppColors.ff8997A9,
+                    fontFamily: I18N.poppins,
+                    fontWeight: FontWeight.w400),
+              ),
+              TextSpan(
+                text: I18N.favHome,
+                style: TextStyle(
+                    fontSize: 25.sp,
+                    color: AppColors.ff122D4D,
+                    fontFamily: I18N.poppins,
+                    fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
         actions: [
           if (AuthService.user.photoURL == null)
-            CircleAvatar(
-              radius: 30.sp,
-              child: Text(
-                AuthService.user.displayName!.substring(0, 1).toUpperCase(),
-                style: TextStyle(
-                  fontSize: 30.sp,
-                  fontFamily: I18N.poppins,
+            GestureDetector(
+              onDoubleTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilePage(),
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                radius: 30.sp,
+                child: Text(
+                  AuthService.user.displayName!.substring(0, 1).toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 30.sp,
+                    fontFamily: I18N.poppins,
+                  ),
                 ),
               ),
             )
@@ -178,45 +111,51 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              child: TextField(
-                decoration: InputDecoration(
-                  fillColor: AppColors.ffffffff,
-                  filled: true,
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.only(
-                        top: 8.0.sp, bottom: 8.0.sp, left: 15.sp, right: 15.sp),
-                    child: Image.asset(
-                      AppIcons.search,
-                      height: 20.sp,
+              child: SizedBox(
+                height: 55.sp,
+                child: TextField(
+                  decoration: InputDecoration(
+                    fillColor: AppColors.ffffffff,
+                    filled: true,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(
+                          top: 10.0.sp,
+                          bottom: 10.0.sp,
+                          left: 15.sp,
+                          right: 15.sp),
+                      child: Image.asset(
+                        AppIcons.search,
+                        height: 20.sp,
+                      ),
                     ),
+                    hintText: "Search",
+                    border: InputBorder.none,
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(14.sp))),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(14.sp))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(14.sp))),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(14.sp))),
+                    disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(14.sp))),
                   ),
-                  hintText: "Search",
-                  border: InputBorder.none,
-                  errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(14.sp))),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(14.sp))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(14.sp))),
-                  focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(14.sp))),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(Radius.circular(14.sp))),
+                  onChanged: (text) {
+                    final bloc = context.read<MainBloc>();
+                    debugPrint(text);
+                    if (text.isEmpty) {
+                      bloc.add(const GetAllDataEvent());
+                    } else {
+                      bloc.add(SearchMainEvent(text));
+                    }
+                  },
                 ),
-                onChanged: (text) {
-                  final bloc = context.read<MainBloc>();
-                  debugPrint(text);
-                  if (text.isEmpty) {
-                    bloc.add(const GetAllDataEvent());
-                  } else {
-                    bloc.add(SearchMainEvent(text));
-                  }
-                },
               ),
             ),
           ),
@@ -343,6 +282,7 @@ class _HomePageState extends State<HomePage> {
         listener: (context, state) {},
         builder: (context, state) {
           return BottomAppBar(
+              color: Colors.white,
               height: 70.sp,
               notchMargin: 12.sp,
               shape: const CircularNotchedRectangle(),
