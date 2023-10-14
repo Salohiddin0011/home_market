@@ -15,6 +15,7 @@ import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/services/firebase/db_service.dart';
 import 'package:home_market/views/bottom_appbar_item.dart';
 
+import 'comment/comment_page.dart';
 import 'profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -207,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                       onLongPress: () {
                         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(post: post)));
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PostPage(post: post)));
+                            builder: (context) => CommentPage(post: post)));
                       },
                       child: Card(
                         child: Column(
