@@ -37,22 +37,24 @@ class UpdatePostSuccess extends PostState {
   List<Object> get props => [];
 }
 
-class PostIsPublicState extends PostState {
-  final bool isPublic;
+class PostIsApartmentState extends PostState {
+  final bool isApartment;
 
-  const PostIsPublicState(this.isPublic);
+  const PostIsApartmentState(this.isApartment);
 
   @override
-  List<Object> get props => [isPublic];
+  List<Object> get props => [isApartment];
 }
 
-class ViewImagePostSuccess extends PostState {
-  final File file;
+class FacilitiesSuccessState extends PostState {
+  final List<Facilities> facilities;
+  final Facilities facility;
 
-  const ViewImagePostSuccess(this.file);
+  const FacilitiesSuccessState(
+      {required this.facilities, required this.facility});
 
   @override
-  List<Object> get props => [file];
+  List<Object> get props => [facilities, facility];
 }
 
 class ViewGridImagesPostSuccess extends PostState {

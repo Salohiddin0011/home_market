@@ -7,16 +7,7 @@ abstract class PostEvent extends Equatable {
 class CreatePostEvent extends PostEvent {
   final String title;
   final String content;
-  final bool isPublic;
-  final File file;
-  final bool carPark;
-  final bool swimming;
-  final bool gym;
-  final bool restaurant;
-  final bool wifi;
-  final bool petCenter;
-  final bool medicalCentre;
-  final bool school;
+  final List<Facilities> facilities;
   final String area;
   final String bathrooms;
   final bool isApartment;
@@ -25,57 +16,40 @@ class CreatePostEvent extends PostEvent {
   final String rooms;
   final List<File?> gridImages;
 
-  const CreatePostEvent(
-      {required this.title,
-      required this.content,
-      required this.isPublic,
-      required this.file,
-      required this.carPark,
-      required this.swimming,
-      required this.gym,
-      required this.restaurant,
-      required this.wifi,
-      required this.petCenter,
-      required this.medicalCentre,
-      required this.school,
-      required this.area,
-      required this.bathrooms,
-      required this.isApartment,
-      required this.phone,
-      required this.price,
-      required this.rooms,
-      required this.gridImages});
+  const CreatePostEvent({
+    required this.title,
+    required this.content,
+    required this.facilities,
+    required this.area,
+    required this.bathrooms,
+    required this.isApartment,
+    required this.phone,
+    required this.price,
+    required this.rooms,
+    required this.gridImages,
+  });
 
   @override
   List<Object?> get props => [
         title,
         content,
-        isPublic,
-        file,
-        carPark,
-        swimming,
-        gym,
-        restaurant,
-        wifi,
-        petCenter,
-        medicalCentre,
-        school,
         area,
         bathrooms,
         isApartment,
         phone,
         price,
         rooms,
-        gridImages
+        gridImages,
+        facilities,
       ];
 }
 
-class PostIsPublicEvent extends PostEvent {
-  final bool isPublic;
-  const PostIsPublicEvent(this.isPublic);
+class PostIsApartmentEvent extends PostEvent {
+  final bool isApartment;
+  const PostIsApartmentEvent(this.isApartment);
 
   @override
-  List<Object?> get props => [isPublic];
+  List<Object?> get props => [isApartment];
 }
 
 class DeletePostEvent extends PostEvent {
@@ -90,16 +64,7 @@ class UpdatePostEvent extends PostEvent {
   final String postId;
   final String title;
   final String content;
-  final bool isPublic;
-  final File file;
-  final bool carPark;
-  final bool swimming;
-  final bool gym;
-  final bool restaurant;
-  final bool wifi;
-  final bool petCenter;
-  final bool medicalCentre;
-  final bool school;
+  final List<Facilities> facilities;
   final String area;
   final String bathrooms;
   final bool isApartment;
@@ -107,19 +72,12 @@ class UpdatePostEvent extends PostEvent {
   final String price;
   final String rooms;
   final List<File?> gridImages;
+  final List<String>? imagesUri;
+
   const UpdatePostEvent(
       {required this.title,
       required this.content,
-      required this.isPublic,
-      required this.file,
-      required this.carPark,
-      required this.swimming,
-      required this.gym,
-      required this.restaurant,
-      required this.wifi,
-      required this.petCenter,
-      required this.medicalCentre,
-      required this.school,
+      required this.facilities,
       required this.area,
       required this.bathrooms,
       required this.isApartment,
@@ -127,22 +85,13 @@ class UpdatePostEvent extends PostEvent {
       required this.price,
       required this.rooms,
       required this.postId,
-      required this.gridImages});
+      required this.gridImages,
+      required this.imagesUri});
 
   @override
   List<Object?> get props => [
         title,
         content,
-        isPublic,
-        file,
-        carPark,
-        swimming,
-        gym,
-        restaurant,
-        wifi,
-        petCenter,
-        medicalCentre,
-        school,
         area,
         bathrooms,
         isApartment,
@@ -150,16 +99,10 @@ class UpdatePostEvent extends PostEvent {
         price,
         rooms,
         postId,
-        gridImages
+        gridImages,
+        facilities,
+        imagesUri
       ];
-}
-
-class ViewImagePostEvent extends PostEvent {
-  final File file;
-  const ViewImagePostEvent(this.file);
-
-  @override
-  List<Object?> get props => [file];
 }
 
 class ViewGridImagesPostEvent extends PostEvent {
@@ -168,6 +111,15 @@ class ViewGridImagesPostEvent extends PostEvent {
 
   @override
   List<Object?> get props => [files];
+}
+
+class FacilitiesPostEvent extends PostEvent {
+  final List<Facilities> facilities;
+  final Facilities facility;
+  const FacilitiesPostEvent({required this.facilities, required this.facility});
+
+  @override
+  List<Object?> get props => [facilities, facility];
 }
 
 class WriteCommentPostEvent extends PostEvent {

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:home_market/models/facilities_model.dart';
 import 'package:home_market/models/message_model.dart';
 import 'package:home_market/models/post_model.dart';
 import 'package:home_market/models/user_model.dart';
@@ -13,60 +14,36 @@ sealed class DBService {
   static final db = FirebaseDatabase.instance;
 
   /// post
-  static Future<bool> storePost(
-      {required String title,
-      required String content,
-      required bool isPublic,
-      required File file,
-      required bool carPark,
-      required bool swimming,
-      required bool gym,
-      required bool restaurant,
-      required bool wifi,
-      required bool petCenter,
-      required bool medicalCentre,
-      required bool school,
-      required String area,
-      required String bathrooms,
-      required bool isApartment,
-      required String phone,
-      required String price,
-      required String rooms,
-      required List<File?> gridImages}) async {
+  static Future<bool> storePost({
+    required String title,
+    required String content,
+    required List<Facilities> facilities,
+    required String area,
+    required String bathrooms,
+    required bool isApartment,
+    required String phone,
+    required String price,
+    required String rooms,
+    required List<File?> gridImages,
+  }) async {
     try {
-      print("try");
       final folder = db.ref(Folder.post);
-      print("try1");
       final child = folder.push();
-      print("try2");
       final id = child.key!;
-      print("try3");
       final userId = AuthService.user.uid;
-      print("try4");
-      final imageUrl = await StoreService.uploadFile(file);
-      print("try5");
       List<String> images = [];
+
       for (var i = 0; i < gridImages.length; i++) {
         final image = await StoreService.uploadFile(gridImages[i]!);
         images.add(image);
       }
-      print("for");
       final post = Post(
           gridImages: images,
-          carPark: carPark,
-          swimming: swimming,
-          gym: gym,
-          restaurant: restaurant,
-          wifi: wifi,
-          petCenter: petCenter,
-          medicalCentre: medicalCentre,
-          school: school,
+          facilities: facilities,
           id: id,
           title: title,
           content: content,
           userId: userId,
-          imageUrl: imageUrl,
-          isPublic: isPublic,
           createdAt: DateTime.now(),
           comments: [],
           area: area,
@@ -108,51 +85,46 @@ sealed class DBService {
       {required String postId,
       required String title,
       required String content,
-      required bool isPublic,
-      required File file,
-      required bool carPark,
-      required bool swimming,
-      required bool gym,
-      required bool restaurant,
-      required bool wifi,
-      required bool petCenter,
-      required bool medicalCentre,
-      required bool school,
       required String area,
       required String bathrooms,
       required bool isApartment,
       required String phone,
       required String price,
       required String rooms,
-      required List<File?> gridImages}) async {
+      required List<Facilities> facilities,
+      required List<File?> gridImages,
+      List<String>? imagesUri}) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
-      await fbPost.update({
-        "title": title,
-        "content": content,
-        "isPublic": isPublic,
-        "file": file,
-        "carPark": carPark,
-        "swimming": swimming,
-        "gym": gym,
-        "restaurant": restaurant,
-        "wifi": wifi,
-        "petCenter": petCenter,
-        "medicalCentre": medicalCentre,
-        "school": school,
-        "area": area,
-        "bathrooms": bathrooms,
-        "isApartment": isApartment,
-        "phone": phone,
-        "price": price,
-        "rooms": rooms,
-        "gridImages": gridImages,
-      });
+      final userId = AuthService.user.uid;
+      List<String> images = [];
+      print(imagesUri);
+      for (var i = 0; i < gridImages.length; i++) {
+        final image = await StoreService.uploadFile(gridImages[i]!);
+        images.add(image);
+      }
 
-      // fbPost.set(post.toJson());
+      final post = Post(
+          gridImages: imagesUri ?? images,
+          facilities: facilities,
+          id: postId,
+          title: title,
+          content: content,
+          userId: userId,
+          createdAt: DateTime.now(),
+          comments: [],
+          area: area,
+          bathrooms: bathrooms,
+          email: AuthService.user.email!,
+          isApartment: isApartment,
+          phone: phone,
+          price: price,
+          rooms: rooms);
+      await fbPost.update(post.toJson());
+
       return true;
     } catch (e) {
-      debugPrint("DB ERROR: $e");
+      debugPrint("DB ERROR: $e ");
       return false;
     }
   }
@@ -174,7 +146,7 @@ sealed class DBService {
 
       switch (type) {
         case SearchType.all:
-          return data.where((element) => element.isPublic == true).toList();
+          return data;
         case SearchType.me:
           return data
               .where((element) => element.userId == AuthService.user.uid)
@@ -258,9 +230,9 @@ sealed class DBService {
 }
 
 sealed class Folder {
-  static const post = "Post";
+  static const post = "Houses";
   static const user = "User";
-  static const postImages = "PostImage";
+  static const postImages = "HouseImage";
 }
 
 enum SearchType {

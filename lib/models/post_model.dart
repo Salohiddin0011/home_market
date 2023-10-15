@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:home_market/models/facilities_model.dart';
 import 'package:home_market/models/message_model.dart';
 
 class Post {
@@ -7,9 +6,7 @@ class Post {
   final String title;
   final String content;
   final String userId;
-  final String imageUrl;
   List<String> gridImages;
-  final bool isPublic;
   final String phone;
   final String email;
   final String price;
@@ -19,35 +16,18 @@ class Post {
   final String bathrooms;
   final bool isApartment;
   //! Facilities
-  final bool carPark;
-  final bool swimming;
-  final bool gym;
-  final bool restaurant;
-  final bool wifi;
-  final bool petCenter;
-  final bool medicalCentre;
-  final bool school;
+  List<Facilities> facilities;
   final bool isMe;
   List<Message> comments;
   final DateTime createdAt;
-  // final List<String> images;
 
   Post(
       {this.isMe = false,
-      required this.carPark,
-      required this.swimming,
-      required this.gym,
-      required this.restaurant,
-      required this.wifi,
-      required this.petCenter,
-      required this.medicalCentre,
-      required this.school,
+      required this.facilities,
       required this.id,
       required this.title,
       required this.content,
       required this.userId,
-      required this.imageUrl,
-      required this.isPublic,
       required this.createdAt,
       required this.comments,
       required this.area,
@@ -66,8 +46,6 @@ class Post {
       title: json['title'] as String,
       content: json['content'] as String,
       userId: json['userId'] as String,
-      imageUrl: json['imageUrl'] as String,
-      isPublic: json['isPublic'] as bool,
       createdAt: DateTime.parse(json["createdAt"] as String),
       comments: json["comments"] != null
           ? (json["comments"] as List)
@@ -81,14 +59,11 @@ class Post {
       phone: json['phone'] as String,
       price: json['price'] as String,
       rooms: json['rooms'] as String,
-      carPark: json['carPark'] as bool,
-      swimming: json['swimming'] as bool,
-      gym: json['gym'] as bool,
-      restaurant: json['restaurant'] as bool,
-      wifi: json['wifi'] as bool,
-      petCenter: json['petCenter'] as bool,
-      medicalCentre: json['medicalCentre'] as bool,
-      school: json['school'] as bool,
+      facilities: (json['facilities'] != null)
+          ? (json['facilities'] as List)
+              .map((e) => Facilities.fromJson(e as Map<String, Object?>))
+              .toList()
+          : [],
     );
   }
 
@@ -98,8 +73,6 @@ class Post {
         "title": title,
         "content": content,
         "userId": userId,
-        "imageUrl": imageUrl,
-        "isPublic": isPublic,
         "createdAt": createdAt.toIso8601String(),
         "comments": comments.map((e) => e.toJson()).toList(),
         "area": area,
@@ -109,13 +82,6 @@ class Post {
         "phone": phone,
         "price": price,
         "rooms": rooms,
-        "carPark": carPark,
-        "swimming": swimming,
-        "gym": gym,
-        "restaurant": restaurant,
-        "wifi": wifi,
-        "petCenter": petCenter,
-        "medicalCentre": medicalCentre,
-        "school": school,
+        "facilities": facilities.map((e) => e.toJson()).toList(),
       };
 }

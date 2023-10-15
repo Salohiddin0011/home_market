@@ -22,6 +22,7 @@ dependencies:
   image_picker: ^1.0.4
   hive_flutter: ^1.1.0
   flutter_screenutil: ^5.9.0
+  device_preview: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -45,13 +46,27 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
           weight: 400
           style: normal
-        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
           weight: 500
           style: normal
-        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
+          weight: 600
+          style: normal
+        - asset: assets/fonts/poppins/Poppins-Bold.ttf
+          weight: 700
+          style: normal
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
+          weight: 600
+          style: normal
+        - asset: assets/fonts/inter/Inter-Medium.ttf
+          weight: 500
+          style: normal
+        - asset: assets/fonts/inter/Inter-Bold.ttf
           weight: 700
           style: normal
 

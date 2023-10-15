@@ -24,11 +24,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   void _searchPost(SearchMainEvent event, Emitter emit) async {
-    final type = state is MyPostSuccess ? SearchType.me : SearchType.all;
+    // final type = state is MyPostSuccess ? SearchType.me : SearchType.all;
 
     emit(MainLoading(state.items));
     try {
-      final list = await DBService.searchPost(event.searchText, type);
+      final list = await DBService.searchPost(event.searchText);
       emit(SearchMainSuccess(list));
     } catch (e) {
       emit(MainFailure(state.items, "Something error, try again later"));

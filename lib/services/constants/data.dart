@@ -1,0 +1,30 @@
+import 'package:home_market/services/constants/app_icons.dart';
+
+List<String> icons = [
+  AppIcons.home,
+  AppIcons.home,
+  AppIcons.favoriteOut,
+  AppIcons.account
+];
+
+List<String> facilitiesIcons = [
+  AppIcons.car,
+  AppIcons.swim,
+  AppIcons.gym,
+  AppIcons.restaurant,
+  AppIcons.wifi,
+  AppIcons.pet,
+  AppIcons.sports,
+  AppIcons.laundry,
+];
+
+List<String> facilitiesName = [
+  "Car Parking",
+  "Swimming",
+  "Gym & Fit",
+  "Restaurant",
+  "Wi-fi",
+  "Pet Center",
+  "Sports",
+  "Laundry",
+];

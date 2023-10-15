@@ -49,7 +49,9 @@ class SignUpPage extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 33.sp,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black),
+                                color: hiveDb.isLight
+                                    ? AppColors.ffffffff
+                                    : AppColors.ff000000),
                             children: [
                               WidgetSpan(
                                   child: Image.asset(AppIcons.logo,

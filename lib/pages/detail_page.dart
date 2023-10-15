@@ -1,11 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
+import 'package:home_market/main.dart';
+import 'package:home_market/models/facilities_model.dart';
 import 'package:home_market/models/post_model.dart';
+import 'package:home_market/services/constants/app_colors.dart';
+import 'package:home_market/services/constants/app_str.dart';
+import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/views/detail_txt.dart';
+import 'package:home_market/views/facilities_view.dart';
+import 'package:home_market/views/information_view.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailPage extends StatefulWidget {
@@ -18,13 +27,19 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  late List<Facilities> facilities;
   late final TextEditingController titleController;
   late final TextEditingController contentController;
-  late bool isPublic;
+  late final TextEditingController phoneCtrl;
+  late final TextEditingController areaController;
+  late final TextEditingController roomsController;
+  late final TextEditingController priceController;
+  late final TextEditingController bathRoomsController;
+  late bool isApartment;
   final ImagePicker picker = ImagePicker();
   File? file;
   List<File?> files = [];
-
+  List<String>? images;
   @override
   void initState() {
     super.initState();
@@ -33,24 +48,39 @@ class _DetailPageState extends State<DetailPage> {
 
   void setup() {
     if (widget.post != null) {
-      isPublic = widget.post!.isPublic;
-      context.read<PostBloc>().add(PostIsPublicEvent(isPublic));
+      images = widget.post!.gridImages;
+      facilities = widget.post!.facilities;
+      isApartment = widget.post!.isApartment;
+      context.read<PostBloc>().add(PostIsApartmentEvent(isApartment));
+      priceController =
+          TextEditingController(text: widget.post!.price.replaceAll(',', ''));
+      phoneCtrl = TextEditingController(text: widget.post!.phone);
       titleController = TextEditingController(text: widget.post!.title);
       contentController = TextEditingController(text: widget.post!.content);
+      areaController =
+          TextEditingController(text: widget.post!.area.replaceAll(',', ''));
+      roomsController = TextEditingController(text: widget.post!.rooms);
+      bathRoomsController = TextEditingController(text: widget.post!.bathrooms);
     } else {
-      isPublic = false;
+      facilities = [];
+      isApartment = false;
+      priceController = TextEditingController();
       titleController = TextEditingController();
       contentController = TextEditingController();
+      areaController = TextEditingController();
+      roomsController = TextEditingController();
+      bathRoomsController = TextEditingController();
+      phoneCtrl = TextEditingController();
     }
   }
 
-  void getImage() async {
-    final xFile = await picker.pickImage(source: ImageSource.gallery);
-    file = xFile != null ? File(xFile.path) : null;
-    if (file != null && mounted) {
-      context.read<PostBloc>().add(ViewImagePostEvent(file!));
-    }
-  }
+  // void getImage() async {
+  //   final xFile = await picker.pickImage(source: ImageSource.gallery);
+  //   file = xFile != null ? File(xFile.path) : null;
+  //   if (file != null && mounted) {
+  //     context.read<PostBloc>().add(ViewImagePostEvent(file!));
+  //   }
+  // }
 
   void getMultiImage() async {
     final xFile = await picker.pickMultiImage(maxHeight: 1000, maxWidth: 1000);
@@ -58,13 +88,26 @@ class _DetailPageState extends State<DetailPage> {
     if (files.isNotEmpty && mounted) {
       context.read<PostBloc>().add(ViewGridImagesPostEvent(files));
     }
+    images = null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("DetailPage"),
+        title: InkWell(
+          onTap: () {
+            hiveDb.changeMode();
+          },
+          child: Text(
+            "Create Announcement",
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18.sp,
+                letterSpacing: 1.3.sp,
+                fontFamily: I18N.poppins),
+          ),
+        ),
       ),
       body: BlocListener<PostBloc, PostState>(
         listener: (context, state) {
@@ -79,164 +122,412 @@ class _DetailPageState extends State<DetailPage> {
             context.read<MainBloc>().add(const GetAllDataEvent());
             Navigator.of(context).pop();
           }
-
-          if (state is PostIsPublicState) {
-            isPublic = state.isPublic;
+          if (state is PostIsApartmentState) {
+            isApartment = state.isApartment;
           }
         },
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: getImage,
-                      child: BlocBuilder<PostBloc, PostState>(
-                        buildWhen: (previous, current) =>
-                            current is ViewImagePostSuccess,
-                        builder: (context, state) {
-                          return Card(
-                            child: SizedBox(
-                              height: MediaQuery.sizeOf(context).width - 40,
-                              width: MediaQuery.sizeOf(context).width,
-                              child: file == null
-                                  ? const Icon(
-                                      Icons.add,
-                                      size: 175,
-                                    )
-                                  : Image.file(
-                                      file!,
-                                      fit: BoxFit.cover,
+        child: ValueListenableBuilder(
+            valueListenable: hiveDb.getListenable,
+            builder: (context, mode, child) {
+              return SafeArea(
+                child:
+                    BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                  return Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Tick if it is an Apartment',
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: I18N.inter),
                                     ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    CustomDetailTextField(
-                        controller: titleController, title: "Title"),
-                    CustomDetailTextField(
-                        controller: contentController, title: "Content"),
-                    Row(
-                      children: [
-                        BlocSelector<PostBloc, PostState, bool>(
-                          selector: (state) {
-                            if (state is PostIsPublicState)
-                              return state.isPublic;
-
-                            return isPublic;
-                          },
-                          builder: (context, value) {
-                            return Checkbox(
-                                value: value,
-                                onChanged: (value) {
-                                  context
-                                      .read<PostBloc>()
-                                      .add(PostIsPublicEvent(value!));
-                                });
-                          },
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "Do you want to make your post public?",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ],
-                    ),
-                    BlocBuilder<PostBloc, PostState>(
-                        buildWhen: (previous, current) =>
-                            current is ViewGridImagesPostSuccess,
-                        builder: (context, state) {
-                          return GestureDetector(
-                            onTap: getMultiImage,
-                            child: files.isEmpty
-                                ? Container(
-                                    height: 150,
-                                    width: 150,
-                                    color: Colors.black,
-                                  )
-                                : GridView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: files.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2),
-                                    itemBuilder: (context, i) {
-                                      return Card(
-                                        child: Image.file(
-                                          files[i]!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                                    },
                                   ),
-                          );
-                        })
-                  ],
-                ),
-              ),
-            ),
-            if (context.read<PostBloc>().state is PostLoading)
-              BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              })
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (widget.post == null) {
-            print('create');
-            context.read<PostBloc>().add(CreatePostEvent(
-                gridImages: files,
-                file: file!,
-                title: titleController.text,
-                content: contentController.text,
-                isPublic: isPublic,
-                carPark: false,
-                swimming: false,
-                gym: false,
-                restaurant: false,
-                wifi: false,
-                petCenter: false,
-                medicalCentre: false,
-                school: false,
-                area: '121',
-                bathrooms: '2',
-                isApartment: false,
-                phone: '1234',
-                price: '2134',
-                rooms: '7'));
-          } else {
-            context.read<PostBloc>().add(UpdatePostEvent(
-                gridImages: files,
-                postId: widget.post!.id,
-                file: file!,
-                title: titleController.text,
-                content: contentController.text,
-                isPublic: isPublic,
-                carPark: false,
-                swimming: false,
-                gym: false,
-                restaurant: false,
-                wifi: false,
-                petCenter: false,
-                medicalCentre: false,
-                school: false,
-                area: '121',
-                bathrooms: '2',
-                isApartment: false,
-                phone: '1234',
-                price: '2134',
-                rooms: '7'));
-          }
-        },
-        child: const Icon(Icons.cloud_upload_rounded),
+                                  Transform.scale(
+                                    scale: 1.2.sp,
+                                    child:
+                                        BlocSelector<PostBloc, PostState, bool>(
+                                      selector: (state) {
+                                        if (state is PostIsApartmentState) {
+                                          return state.isApartment;
+                                        }
+
+                                        return isApartment;
+                                      },
+                                      builder: (context, value) {
+                                        return Checkbox.adaptive(
+                                            value: value,
+                                            onChanged: (value) {
+                                              context.read<PostBloc>().add(
+                                                  PostIsApartmentEvent(value!));
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 15.sp),
+                              Text(
+                                "Some Photos related to your Announcement",
+                                style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: I18N.poppins),
+                              ),
+                              SizedBox(height: 15.sp),
+                              BlocBuilder<PostBloc, PostState>(
+                                buildWhen: (previous, current) =>
+                                    current is ViewGridImagesPostSuccess,
+                                builder: (context, state) {
+                                  return GestureDetector(
+                                    onTap: getMultiImage,
+                                    child: files.isEmpty && images == null
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            height: 150.sp,
+                                            width: 150.sp,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: !hiveDb.isLight
+                                                  ? AppColors.ffffffff
+                                                  : AppColors.ff000000
+                                                      .withOpacity(.7),
+                                              boxShadow: !hiveDb.isLight
+                                                  ? [
+                                                      BoxShadow(
+                                                        blurRadius: 2.sp,
+                                                        offset: Offset(
+                                                            -2.sp, -2.sp),
+                                                        color: AppColors
+                                                            .ff016FFF
+                                                            .withOpacity(
+                                                                .08.sp),
+                                                      ),
+                                                      BoxShadow(
+                                                        blurRadius: 4.sp,
+                                                        offset:
+                                                            Offset(3.sp, 3.sp),
+                                                        color: AppColors
+                                                            .ff016FFF
+                                                            .withOpacity(
+                                                                .12.sp),
+                                                      ),
+                                                    ]
+                                                  : [
+                                                      BoxShadow(
+                                                        blurRadius: 2.sp,
+                                                        offset: Offset(
+                                                            -2.sp, -2.sp),
+                                                        color: AppColors
+                                                            .ffffffff
+                                                            .withOpacity(
+                                                                .08.sp),
+                                                      ),
+                                                      BoxShadow(
+                                                        blurRadius: 4.sp,
+                                                        offset:
+                                                            Offset(3.sp, 3.sp),
+                                                        color: AppColors
+                                                            .ffffffff
+                                                            .withOpacity(
+                                                                .12.sp),
+                                                      ),
+                                                    ],
+                                            ),
+                                            child: Text(
+                                              "Add Photos",
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.ff016FFF,
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 100.sp,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              shrinkWrap: true,
+                                              itemCount: images == null
+                                                  ? files.length
+                                                  : images!.length,
+                                              itemBuilder: (context, i) {
+                                                return Card(
+                                                    child: images == null
+                                                        ? Image.file(
+                                                            files[i]!,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Image.network(
+                                                            images![i]));
+                                              },
+                                            ),
+                                          ),
+                                  );
+                                },
+                              ),
+                              SizedBox(height: 15.sp),
+                              Text(
+                                'Name of the building or Location',
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: I18N.poppins,
+                                  color: AppColors.ff016FFF,
+                                ),
+                              ),
+                              SizedBox(height: 10.sp),
+                              CustomDetailTextField(
+                                controller: titleController,
+                                title: "Title",
+                                maxLines: 2,
+                              ),
+                              SizedBox(height: 10.sp),
+                              Text(
+                                'Describe your House or Apartment',
+                                style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: I18N.poppins,
+                                    color: AppColors.ff016FFF),
+                              ),
+                              SizedBox(height: 10.sp),
+                              CustomDetailTextField(
+                                controller: contentController,
+                                title: "Content",
+                                maxLines: 10,
+                              ),
+                              SizedBox(height: 20.sp),
+                              Text(
+                                'Information about the building',
+                                style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: I18N.inter),
+                              ),
+                              SizedBox(height: 20.sp),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AboutBuilding(
+                                      name: "Area", controller: areaController),
+                                  AboutBuilding(
+                                      name: "Rooms",
+                                      controller: roomsController),
+                                  AboutBuilding(
+                                      name: "Bathrooms",
+                                      controller: bathRoomsController),
+                                  AboutBuilding(
+                                    name: "Price",
+                                    controller: priceController,
+                                    isPrice: true,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20.sp),
+                              Text(
+                                'Facilities',
+                                style: TextStyle(
+                                    color: AppColors.ff016FFF,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: I18N.inter),
+                              ),
+                              Wrap(
+                                children: [
+                                  for (int i = 0; i < 8; i++)
+                                    BlocBuilder<PostBloc, PostState>(
+                                        builder: (context, state) {
+                                      return FacilitiesContainer(
+                                          facilities: facilities,
+                                          facility: Facilities(
+                                              icon: facilitiesIcons[i],
+                                              name: facilitiesName[i]),
+                                          onTap: () {
+                                            final Facilities newFacility =
+                                                Facilities(
+                                                    icon: facilitiesIcons[i],
+                                                    name: facilitiesName[i]);
+                                            context.read<PostBloc>().add(
+                                                FacilitiesPostEvent(
+                                                    facilities: facilities,
+                                                    facility: newFacility));
+                                          });
+                                    }),
+                                ],
+                              ),
+                              SizedBox(height: 30.sp),
+                              Text(
+                                'Phone Number',
+                                style: TextStyle(
+                                    color: AppColors.ff016FFF,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: I18N.inter),
+                              ),
+                              SizedBox(height: 15.sp),
+                              CustomDetailTextField(
+                                inputFormatter: true,
+                                controller: phoneCtrl,
+                                title: "Enter your Phone Number",
+                                maxLines: 1,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (titleController.text.isEmpty ||
+                                      contentController.text.isEmpty ||
+                                      areaController.text.isEmpty ||
+                                      bathRoomsController.text.isEmpty ||
+                                      phoneCtrl.text.isEmpty ||
+                                      priceController.text.isEmpty ||
+                                      roomsController.text.isEmpty ||
+                                      (files.isEmpty && images == null)) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: hiveDb.isLight
+                                                ? AppColors.ff000000
+                                                : AppColors.ffffffff,
+                                            content: Text(
+                                              'Plese fill all the field before pushing your Announcement',
+                                              style: TextStyle(
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily: I18N.inter,
+                                                  color: hiveDb.isLight
+                                                      ? AppColors.ffffffff
+                                                      : AppColors.ff000000
+                                                          .withOpacity(.7)),
+                                            )));
+                                    return;
+                                  }
+                                  String square = '';
+                                  String price = '';
+                                  int priceNum = 0;
+                                  int squareNum = 0;
+
+                                  for (var i = priceController.text.length - 1;
+                                      i >= 0;
+                                      i--) {
+                                    if (i == 2 || i == 5) {
+                                      if (priceController.text.length != 3) {
+                                        price += ',';
+                                      }
+                                    }
+                                    price += priceController.text[priceNum];
+                                    if (priceNum <
+                                        priceController.text.length - 1) {
+                                      priceNum++;
+                                    }
+                                  }
+
+                                  for (var i = areaController.text.length - 1;
+                                      i >= 0;
+                                      i--) {
+                                    if (i == 2 || i == 5) {
+                                      if (areaController.text.length != 3) {
+                                        square += ',';
+                                      }
+                                    }
+                                    square += areaController.text[squareNum];
+                                    if (squareNum <
+                                        areaController.text.length - 1) {
+                                      squareNum++;
+                                    }
+                                  }
+                                  if (square[0] == ',') {
+                                    square = square.substring(1);
+                                  }
+                                  if (price[0] == ',') {
+                                    price = price.substring(1);
+                                  }
+
+                                  if (widget.post == null) {
+                                    context.read<PostBloc>().add(
+                                        CreatePostEvent(
+                                            gridImages: files,
+                                            title: titleController.text,
+                                            content: contentController.text,
+                                            facilities: facilities,
+                                            area: square,
+                                            bathrooms: bathRoomsController.text,
+                                            isApartment: isApartment,
+                                            phone: phoneCtrl.text,
+                                            price: price,
+                                            rooms: roomsController.text));
+                                  } else {
+                                    print("IMAGES = $images");
+                                    context.read<PostBloc>().add(
+                                        UpdatePostEvent(
+                                            imagesUri: images,
+                                            gridImages: files,
+                                            postId: widget.post!.id,
+                                            title: titleController.text,
+                                            content: contentController.text,
+                                            facilities: facilities,
+                                            area: square,
+                                            bathrooms: bathRoomsController.text,
+                                            isApartment: isApartment,
+                                            phone: phoneCtrl.text,
+                                            price: price,
+                                            rooms: roomsController.text));
+                                  }
+                                },
+                                child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  alignment: Alignment.center,
+                                  height: 60.sp,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(
+                                      top: 20.sp, bottom: 20.sp),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.ff016FFF.withOpacity(.3),
+                                          AppColors.ff016FFF.withOpacity(.5),
+                                          AppColors.ff016FFF.withOpacity(.8),
+                                          AppColors.ff016FFF
+                                        ],
+                                        begin: Alignment.bottomLeft,
+                                        end: Alignment.topRight),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(35.sp),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Push Announcement',
+                                    style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: I18N.inter,
+                                        color: hiveDb.isLight
+                                            ? AppColors.ffffffff
+                                            : AppColors.ff000000
+                                                .withOpacity(.7)),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (state is PostLoading)
+                        const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        )
+                    ],
+                  );
+                }),
+              );
+            }),
       ),
     );
   }
