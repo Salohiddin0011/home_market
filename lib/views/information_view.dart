@@ -4,13 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AboutBuilding extends StatelessWidget {
   final bool isPrice;
+  final bool isRoom;
+  final bool isBath;
   final TextEditingController controller;
   final String name;
   const AboutBuilding(
       {super.key,
       required this.name,
       required this.controller,
-      this.isPrice = false});
+      this.isPrice = false,
+      this.isBath = false,
+      this.isRoom = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,13 @@ class AboutBuilding extends StatelessWidget {
           height: 50.sp,
           child: TextField(
             controller: controller,
-            maxLength: isPrice ? 7 : 5,
+            maxLength: isPrice
+                ? 7
+                : isRoom
+                    ? 2
+                    : isBath
+                        ? 1
+                        : 5,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 15.sp,

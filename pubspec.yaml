@@ -23,6 +23,9 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_screenutil: ^5.9.0
   device_preview: ^1.1.0
+  flutter_chat_bubble: ^2.0.2
+  url_launcher: ^6.1.14
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:

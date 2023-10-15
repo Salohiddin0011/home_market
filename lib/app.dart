@@ -9,6 +9,7 @@ import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/home_page.dart';
+import 'package:home_market/pages/main_page.dart';
 import 'package:home_market/pages/sign_in_page.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 
@@ -40,7 +41,7 @@ class HomeMarketApp extends StatelessWidget {
                   stream: AuthService.auth.authStateChanges(),
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
-                      return const HomePage();
+                      return const MainPage();
                     } else {
                       return SignInPage();
                     }

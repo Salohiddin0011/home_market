@@ -95,18 +95,13 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () {
-            hiveDb.changeMode();
-          },
-          child: Text(
-            "Create Announcement",
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
-                letterSpacing: 1.3.sp,
-                fontFamily: I18N.poppins),
-          ),
+        title: Text(
+          "Create Announcement",
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18.sp,
+              letterSpacing: 1.3.sp,
+              fontFamily: I18N.poppins),
         ),
       ),
       body: BlocListener<PostBloc, PostState>(
@@ -321,11 +316,15 @@ class _DetailPageState extends State<DetailPage> {
                                   AboutBuilding(
                                       name: "Area", controller: areaController),
                                   AboutBuilding(
-                                      name: "Rooms",
-                                      controller: roomsController),
+                                    name: "Rooms",
+                                    controller: roomsController,
+                                    isRoom: true,
+                                  ),
                                   AboutBuilding(
-                                      name: "Bathrooms",
-                                      controller: bathRoomsController),
+                                    name: "Bathrooms",
+                                    controller: bathRoomsController,
+                                    isBath: true,
+                                  ),
                                   AboutBuilding(
                                     name: "Price",
                                     controller: priceController,

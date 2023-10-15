@@ -334,6 +334,11 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               final post = state.items[index];
                               return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          CommentPage(post: post)));
+                                },
                                 onLongPress: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
@@ -520,50 +525,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            ),
-            floatingActionButton: SizedBox(
-              height: 55.sp,
-              width: 55.sp,
-              child: FloatingActionButton(
-                shape: const StadiumBorder(),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const DetailPage()));
-                },
-                child: Icon(
-                  Icons.add,
-                  size: 30.sp,
-                  color:
-                      hiveDb.isLight ? AppColors.ffffffff : AppColors.ff000000,
-                ),
-              ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            bottomNavigationBar:
-                BlocConsumer<LandingPageBloc, LandingPageState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return BottomAppBar(
-                    height: 70.sp,
-                    notchMargin: 12.sp,
-                    shape: const CircularNotchedRectangle(),
-                    padding: EdgeInsets.symmetric(horizontal: 20.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        for (int i = 0; i < icons.length; i++)
-                          BottomAppBarItem(
-                              icon: icons[i],
-                              index: i,
-                              onTap: () {
-                                context
-                                    .read<LandingPageBloc>()
-                                    .add(TabChange(tabIndex: i));
-                              })
-                      ],
-                    ));
-              },
             ),
           );
         });

@@ -181,9 +181,11 @@ sealed class DBService {
       String email, String password, String username, String uid) async {
     try {
       final folder = db.ref(Folder.user).child(uid);
+
       final member = Member(
           uid: uid, username: username, email: email, password: password);
       await folder.set(member.toJson());
+
       return true;
     } catch (e) {
       debugPrint("DB ERROR: $e");
