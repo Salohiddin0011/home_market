@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,9 @@ class HomeMarketApp extends StatelessWidget {
           valueListenable: hiveDb.getListenable,
           builder: (context, mode, child) {
             return MaterialApp(
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
               theme: ThemeData.light(useMaterial3: true),
               darkTheme: ThemeData.dark(useMaterial3: true),
               themeMode: hiveDb.mode,

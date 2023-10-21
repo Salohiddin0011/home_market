@@ -26,6 +26,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   url_launcher: ^6.1.14
   flutter_slidable: ^3.0.0
+  easy_localization: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +46,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+    - assets/translations/
 
   fonts:
     - family: Poppins

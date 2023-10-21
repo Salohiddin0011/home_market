@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
@@ -26,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
             appBar: AppBar(
               elevation: .0,
               title: Text(
-                'Settings',
+                'settings',
                 style: TextStyle(
                     fontSize: 19.sp,
                     color: hiveDb.isLight
@@ -34,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         : AppColors.ff122D4D,
                     fontFamily: I18N.poppins,
                     fontWeight: FontWeight.w600),
-              ),
+              ).tr(),
               centerTitle: true,
               leading: IconButton(
                 onPressed: () {
@@ -90,10 +92,28 @@ class _SettingsPageState extends State<SettingsPage> {
                             fontWeight: FontWeight.w500),
                       ),
                       const Spacer(flex: 1),
-                      const Icon(
-                        Icons.language,
+                      PopupMenuButton<Locale>(
+                        onSelected: (value) {
+                          log(value.toString());
+                          context.setLocale(value);
+                        },
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        itemBuilder: (context) {
+                          return const [
+                            PopupMenuItem(
+                              value: Locale("uz", "UZ"),
+                              child: Text("🇺🇿 UZ"),
+                            ),
+                            PopupMenuItem(
+                              value: Locale("en", "US"),
+                              child: Text("🇺🇸 EN"),
+                            ),
+                          ];
+                        },
+                        icon: const Icon(Icons.language_rounded),
                       ),
-                      const SizedBox(width: 15),
                     ],
                   ),
                 ),
