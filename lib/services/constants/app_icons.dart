@@ -15,4 +15,10 @@ sealed class AppIcons {
   static const String swim = 'assets/icons/ic_swim.png';
   static const String wifi = 'assets/icons/ic_wifi.png';
   static const String car = 'assets/icons/ic_parking.png';
+  static const String bathroom = 'assets/icons/ic_bathroom.png';
+  static const String circleArrow = 'assets/icons/ic_circle_arr.png';
+  static const String circleShare = 'assets/icons/ic_circle_like.png';
+  static const String circleLike = 'assets/icons/ic_circle_share.png';
+  static const String phone = 'assets/icons/ic_phone.png';
+  static const String email = 'assets/icons/ic_email.png';
 }

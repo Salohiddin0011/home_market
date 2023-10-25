@@ -19,6 +19,7 @@ sealed class I18N {
   static const favHome = "Favorite Home";
   static const poppins = "Poppins";
   static const all = "All";
+  static const recomendations = "Recomendations";
   static const more = "More";
   static const inter = "Inter";
   static const apartment = "Apartment";

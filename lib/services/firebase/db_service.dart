@@ -34,7 +34,7 @@ sealed class DBService {
       List<String> images = [];
 
       for (var i = 0; i < gridImages.length; i++) {
-        final image = await StoreService.uploadFile(gridImages[i]!);
+        final image = await StoreService.uploadFile(gridImages[i]!, id);
         images.add(image);
       }
       final post = Post(
@@ -100,7 +100,7 @@ sealed class DBService {
       List<String> images = [];
       print(imagesUri);
       for (var i = 0; i < gridImages.length; i++) {
-        final image = await StoreService.uploadFile(gridImages[i]!);
+        final image = await StoreService.uploadFile(gridImages[i]!, postId);
         images.add(image);
       }
 

@@ -21,41 +21,47 @@ class _MainPageState extends State<MainPage> {
   PageController controller = PageController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BlocConsumer<LandingPageBloc, LandingPageState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return BottomAppBar(
-              height: 70.sp,
-              notchMargin: 12.sp,
-              shape: const CircularNotchedRectangle(),
-              padding: EdgeInsets.symmetric(horizontal: 20.sp),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  for (int i = 0; i < icons.length; i++)
-                    BottomAppBarItem(
-                        icon: icons[i],
-                        index: i,
-                        onTap: () {
-                          context
-                              .read<LandingPageBloc>()
-                              .add(TabChange(tabIndex: i));
-                          controller.jumpToPage(i);
-                        })
-                ],
-              ));
-        },
-      ),
-      body: PageView(
-        controller: controller,
-        children: [
-          HomePage(),
-          HomePage(),
-          HomePage(),
-          ProfilePage(),
-        ],
-      ),
-    );
+    return ValueListenableBuilder(
+        valueListenable: hiveDb.getListenable,
+        builder: (context, mode, child) {
+          return Scaffold(
+            bottomNavigationBar:
+                BlocConsumer<LandingPageBloc, LandingPageState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return BottomAppBar(
+                    height: 70.sp,
+                    notchMargin: 12.sp,
+                    shape: const CircularNotchedRectangle(),
+                    padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (int i = 0; i < icons.length; i++)
+                          BottomAppBarItem(
+                              icon: icons[i],
+                              index: i,
+                              onTap: () {
+                                context
+                                    .read<LandingPageBloc>()
+                                    .add(TabChange(tabIndex: i));
+                                controller.jumpToPage(i);
+                              })
+                      ],
+                    ));
+              },
+            ),
+            body: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: controller,
+              children: const [
+                HomePage(),
+                HomePage(),
+                HomePage(),
+                ProfilePage(),
+              ],
+            ),
+          );
+        });
   }
 }

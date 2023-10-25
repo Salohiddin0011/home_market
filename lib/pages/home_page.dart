@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +8,7 @@ import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/detail_page.dart';
+import 'package:home_market/pages/post_info_page.dart';
 import 'package:home_market/pages/post_page.dart';
 import 'package:home_market/pages/sign_in_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
@@ -294,237 +296,388 @@ class _HomePageState extends State<HomePage> {
                   },
                 )
               ],
-              child: ListView(
-                children: [
-                  SizedBox(height: 300.sp),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.sp, right: 15.sp),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child:
+                  BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+                return ListView(
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 10.sp, bottom: 20.sp, top: 10.sp),
+                        child: context.read<MainBloc>().state.items.isNotEmpty
+                            ? Text(
+                                I18N.recomendations,
+                                style: TextStyle(
+                                  fontFamily: I18N.inter,
+                                  fontSize: 23.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : SizedBox.shrink()),
+                    Stack(
                       children: [
-                        Text(
-                          I18N.all,
-                          style: TextStyle(
-                            fontFamily: I18N.inter,
-                            fontSize: 25.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          I18N.more,
-                          style: TextStyle(
-                              fontFamily: I18N.poppins,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.ff989898),
-                        ),
-                      ],
-                    ),
-                  ),
-                  BlocBuilder<MainBloc, MainState>(
-                    builder: (context, state) {
-                      return Stack(
-                        children: [
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: EdgeInsets.only(
-                                left: 10.sp, top: 15.sp, right: 10.sp),
-                            itemCount: state.items.length,
-                            itemBuilder: (context, index) {
-                              final post = state.items[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          CommentPage(post: post)));
-                                },
-                                onLongPress: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailPage(post: post)));
-                                },
-                                child: Stack(
-                                  alignment: Alignment(0.9.sp, -1.sp),
-                                  children: [
-                                    Card(
-                                      color: !hiveDb.isLight
-                                          ? AppColors.ffffffff
-                                          : AppColors.ff000000.withOpacity(.4),
-                                      child: Container(
-                                        padding: EdgeInsets.all(10.sp),
-                                        height: 120.sp,
-                                        width: double.infinity,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                                flex: 2,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                15.sp)),
-                                                    image: DecorationImage(
-                                                        image: NetworkImage(
-                                                          post.gridImages[0],
-                                                        ),
-                                                        fit: BoxFit.cover),
-                                                  ),
-                                                )),
-                                            Expanded(
-                                              flex: 4,
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 7.sp),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(height: 15.sp),
-                                                    Text(
-                                                      post.title,
-                                                      style: TextStyle(
-                                                        fontFamily: I18N.inter,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 18.sp,
-                                                        color: hiveDb.isLight
-                                                            ? AppColors.ffffffff
-                                                                .withOpacity(.9)
-                                                            : AppColors
-                                                                .ff122D4D,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 5.sp),
-                                                    Text(
-                                                      post.content,
-                                                      style: TextStyle(
-                                                        fontFamily: I18N.inter,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 14.sp,
-                                                        color: hiveDb.isLight
-                                                            ? AppColors.ffffffff
-                                                                .withOpacity(.7)
-                                                            : AppColors
-                                                                .ff415770,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    Expanded(
-                                                      child: Row(
-                                                        children: [
-                                                          AreaAndRooms(
-                                                              count: post.area,
-                                                              icon: AppIcons
-                                                                  .area),
-                                                          SizedBox(
-                                                              width: 10.sp),
-                                                          AreaAndRooms(
-                                                              count: post.rooms,
-                                                              icon: AppIcons
-                                                                  .rooms),
-                                                          const Spacer(),
-                                                          Text(
-                                                            '\$${post.price}',
-                                                            style: TextStyle(
-                                                              fontSize: 12.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                              color: AppColors
-                                                                  .ff016FFF,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                        state.items.isNotEmpty
+                            ? CarouselSlider.builder(
+                                itemCount: state.items.length,
+                                itemBuilder: (context, index, realIndex) {
+                                  final post = state.items[index];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: hiveDb.isLight
+                                          ? AppColors.ff000000.withOpacity(.2)
+                                          : AppColors.ffffffff,
+                                      borderRadius:
+                                          BorderRadius.circular(15.sp),
+                                      boxShadow: [
+                                        hiveDb.isLight
+                                            ? BoxShadow(
+                                                blurRadius: 4.sp,
+                                                offset: Offset(2.sp, 2.sp),
+                                                color: AppColors.ffffffff,
+                                                blurStyle: BlurStyle.outer)
+                                            : BoxShadow(
+                                                blurRadius: 4.sp,
+                                                offset: Offset(2.sp, 2.sp),
+                                                color: AppColors.ff000000
+                                                    .withOpacity(.3),
+                                              ),
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.only(right: 20.sp),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(15.sp),
+                                                topRight:
+                                                    Radius.circular(15.sp)),
+                                            child: Image(
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                post.gridImages[0],
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 15.sp,
+                                                right: 15.sp,
+                                                bottom: 5.sp),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    post.title,
+                                                    style: TextStyle(
+                                                      fontFamily: I18N.inter,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 18.sp,
+                                                      color: hiveDb.isLight
+                                                          ? AppColors.ffffffff
+                                                              .withOpacity(.9)
+                                                          : AppColors.ff122D4D,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    post.content,
+                                                    style: TextStyle(
+                                                      fontFamily: I18N.inter,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14.sp,
+                                                      color: hiveDb.isLight
+                                                          ? AppColors.ffffffff
+                                                              .withOpacity(.7)
+                                                          : AppColors.ff415770,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        '\$${post.price}',
+                                                        style: TextStyle(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          color: AppColors
+                                                              .ff016FFF,
+                                                        ),
+                                                      ),
+                                                      Icon(
+                                                        Icons.favorite_outline,
+                                                        size: 25.sp,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                options: CarouselOptions(
+                                  enlargeStrategy:
+                                      CenterPageEnlargeStrategy.zoom,
+                                  clipBehavior: Clip.none,
+                                  aspectRatio: 6.sp / 3.5.sp,
+                                  viewportFraction: 0.8,
+                                  initialPage: 0,
+                                  enableInfiniteScroll: true,
+                                  reverse: false,
+                                  autoPlay: true,
+                                  autoPlayInterval: const Duration(seconds: 3),
+                                  autoPlayAnimationDuration:
+                                      const Duration(milliseconds: 800),
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enlargeCenterPage: true,
+                                  enlargeFactor: 0.5,
+                                  scrollDirection: Axis.horizontal,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        if (state is MainLoading)
+                          const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.sp, right: 15.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            I18N.all,
+                            style: TextStyle(
+                              fontFamily: I18N.inter,
+                              fontSize: 23.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            I18N.more,
+                            style: TextStyle(
+                                fontFamily: I18N.poppins,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.ff989898),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Stack(
+                      children: [
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                              left: 10.sp, top: 15.sp, right: 10.sp),
+                          itemCount: state.items.length,
+                          itemBuilder: (context, index) {
+                            final post = state.items[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        InfoPage(post: post)));
+                              },
+                              onLongPress: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPage(post: post)));
+                              },
+                              child: Stack(
+                                alignment: Alignment(0.9.sp, -1.sp),
+                                children: [
+                                  Card(
+                                    color: !hiveDb.isLight
+                                        ? AppColors.ffffffff
+                                        : AppColors.ff000000.withOpacity(.4),
+                                    child: Container(
+                                      padding: EdgeInsets.all(10.sp),
+                                      height: 120.sp,
+                                      width: double.infinity,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              15.sp)),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                        post.gridImages[0],
+                                                      ),
+                                                      fit: BoxFit.cover),
+                                                ),
+                                              )),
+                                          Expanded(
+                                            flex: 7,
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 7.sp),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(height: 15.sp),
+                                                  Text(
+                                                    post.title,
+                                                    style: TextStyle(
+                                                      fontFamily: I18N.inter,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 18.sp,
+                                                      color: hiveDb.isLight
+                                                          ? AppColors.ffffffff
+                                                              .withOpacity(.9)
+                                                          : AppColors.ff122D4D,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 5.sp),
+                                                  Text(
+                                                    post.content,
+                                                    style: TextStyle(
+                                                      fontFamily: I18N.inter,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14.sp,
+                                                      color: hiveDb.isLight
+                                                          ? AppColors.ffffffff
+                                                              .withOpacity(.7)
+                                                          : AppColors.ff415770,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  const Spacer(),
+                                                  Expanded(
+                                                    child: Row(
+                                                      children: [
+                                                        AreaAndRooms(
+                                                            count: post.area,
+                                                            icon:
+                                                                AppIcons.area),
+                                                        SizedBox(width: 10.sp),
+                                                        AreaAndRooms(
+                                                            count: post.rooms,
+                                                            icon:
+                                                                AppIcons.rooms),
+                                                        const Spacer(),
+                                                        Text(
+                                                          '\$${post.price}',
+                                                          style: TextStyle(
+                                                            fontSize: 12.sp,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            color: AppColors
+                                                                .ff016FFF,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.sp, vertical: 5.sp),
-                                      decoration: BoxDecoration(
-                                          color: hiveDb.isLight
-                                              ? AppColors.ff000000
-                                                  .withOpacity(.4)
-                                              : AppColors.ffffffff,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20.sp),
-                                          ),
-                                          boxShadow: !hiveDb.isLight
-                                              ? [
-                                                  BoxShadow(
-                                                    blurRadius: 2,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.sp, vertical: 5.sp),
+                                    decoration: BoxDecoration(
+                                        color: hiveDb.isLight
+                                            ? AppColors.ff000000.withOpacity(.4)
+                                            : AppColors.ffffffff,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20.sp),
+                                        ),
+                                        boxShadow: !hiveDb.isLight
+                                            ? [
+                                                BoxShadow(
+                                                  blurRadius: 2,
+                                                  offset: const Offset(1, 1),
+                                                  color: AppColors.ff000000
+                                                      .withOpacity(.2),
+                                                ),
+                                                BoxShadow(
+                                                  blurRadius: 2,
+                                                  offset: const Offset(-1, -1),
+                                                  color: AppColors.ff000000
+                                                      .withOpacity(.1),
+                                                ),
+                                              ]
+                                            : [
+                                                BoxShadow(
+                                                    blurRadius: 4,
                                                     offset: const Offset(1, 1),
-                                                    color: AppColors.ff000000
-                                                        .withOpacity(.2),
-                                                  ),
-                                                  BoxShadow(
-                                                    blurRadius: 2,
+                                                    color: AppColors.ffffffff
+                                                        .withOpacity(.7),
+                                                    blurStyle: BlurStyle.outer),
+                                                BoxShadow(
+                                                    blurRadius: 4,
                                                     offset:
                                                         const Offset(-1, -1),
-                                                    color: AppColors.ff000000
-                                                        .withOpacity(.1),
-                                                  ),
-                                                ]
-                                              : [
-                                                  BoxShadow(
-                                                      blurRadius: 4,
-                                                      offset:
-                                                          const Offset(1, 1),
-                                                      color: AppColors.ffffffff
-                                                          .withOpacity(.7),
-                                                      blurStyle:
-                                                          BlurStyle.outer),
-                                                  BoxShadow(
-                                                      blurRadius: 4,
-                                                      offset:
-                                                          const Offset(-1, -1),
-                                                      color: AppColors.ffffffff
-                                                          .withOpacity(.7),
-                                                      blurStyle:
-                                                          BlurStyle.outer),
-                                                ]),
-                                      child: Text(
-                                        post.isApartment
-                                            ? I18N.apartment
-                                            : I18N.house,
-                                        style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: I18N.poppins,
-                                            color: AppColors.ff478FF1),
-                                      ),
+                                                    color: AppColors.ffffffff
+                                                        .withOpacity(.7),
+                                                    blurStyle: BlurStyle.outer),
+                                              ]),
+                                    child: Text(
+                                      post.isApartment
+                                          ? I18N.apartment
+                                          : I18N.house,
+                                      style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: I18N.poppins,
+                                          color: AppColors.ff478FF1),
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        if (state is MainLoading)
+                          const Center(
+                            child: CircularProgressIndicator.adaptive(),
                           ),
-                          if (state is MainLoading)
-                            const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
+                      ],
+                    ),
+                  ],
+                );
+              }),
             ),
           );
         });

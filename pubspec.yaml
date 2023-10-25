@@ -26,6 +26,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
   url_launcher: ^6.1.14
   flutter_slidable: ^3.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
