@@ -1,4 +1,4 @@
-import 'package:device_preview/device_preview.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +8,6 @@ import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
-import 'package:home_market/pages/home_page.dart';
 import 'package:home_market/pages/main_page.dart';
 import 'package:home_market/pages/sign_in_page.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
@@ -32,6 +31,9 @@ class HomeMarketApp extends StatelessWidget {
               theme: ThemeData.light(useMaterial3: true),
               darkTheme: ThemeData.dark(useMaterial3: true),
               themeMode: hiveDb.mode,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
               debugShowCheckedModeBanner: false,
               home: ScreenUtilInit(
                 designSize: const Size(375, 812),

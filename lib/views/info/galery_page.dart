@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:home_market/models/post_model.dart';
 
+// ignore: must_be_immutable
 class GalleryPage extends StatefulWidget {
   Post? post;
   GalleryPage({required this.post, super.key});

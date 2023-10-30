@@ -28,3 +28,8 @@ List<String> facilitiesName = [
   "Sports",
   "Laundry",
 ];
+
+class LatLong {
+  static double? lat;
+  static double? long;
+}

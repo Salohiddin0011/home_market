@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +19,8 @@ import 'settings_page.dart';
 import '../sign_in_page.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final PageController controller;
+  const ProfilePage({super.key, required this.controller});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -140,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
           return AlertDialog.adaptive(
             title: Center(
               child: Text(
-                "Contact us",
+                "Contact us".tr(),
                 style: TextStyle(
                     fontSize: 18.sp,
                     color: hiveDb.isLight
@@ -151,87 +153,85 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             actions: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          const String url = 'https://t.me/IlhomDev1';
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        const String url = 'https://t.me/IlhomDev1';
 
-                          if (await canLaunchUrlString(url)) {
-                            await launchUrlString(url);
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: AppColors.ffffffff,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.sp))),
-                          child: Icon(
-                            Icons.telegram,
-                            size: 45.sp,
-                            color: AppColors.ff016FFF,
-                          ),
+                        if (await canLaunchUrlString(url)) {
+                          await launchUrlString(url);
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColors.ffffffff,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.sp))),
+                        child: Icon(
+                          Icons.telegram,
+                          size: 45.sp,
+                          color: AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                    SizedBox(width: 2.sp),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          Uri url = Uri(scheme: 'tel', path: '+998901234567');
+                  ),
+                  SizedBox(width: 2.sp),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        Uri url = Uri(scheme: 'tel', path: '+998901234567');
 
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: AppColors.ffffffff,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.sp))),
-                          child: Icon(
-                            Icons.phone,
-                            size: 45.sp,
-                            color: AppColors.ff016FFF,
-                          ),
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColors.ffffffff,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.sp))),
+                        child: Icon(
+                          Icons.phone,
+                          size: 45.sp,
+                          color: AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                    SizedBox(width: 2.sp),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          const String email = 'homemarketapp@gmail.com';
-                          const String subject = "Home market messeng";
-                          const String messeng = "Hello there\n\n";
-                          const String url =
-                              'mailto:$email?subject=${subject}&body=${messeng}';
+                  ),
+                  SizedBox(width: 2.sp),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        const String email = 'homemarketapp@gmail.com';
+                        const String subject = "Home market messeng";
+                        const String messeng = "Hello there\n\n";
+                        const String url =
+                            'mailto:$email?subject=${subject}&body=${messeng}';
 
-                          if (await canLaunchUrlString(url)) {
-                            await launchUrlString(url);
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: AppColors.ffffffff,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.sp))),
-                          child: Icon(
-                            Icons.email_outlined,
-                            size: 45.sp,
-                            color: AppColors.ff016FFF,
-                          ),
+                        if (await canLaunchUrlString(url)) {
+                          await launchUrlString(url);
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColors.ffffffff,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.sp))),
+                        child: Icon(
+                          Icons.email_outlined,
+                          size: 45.sp,
+                          color: AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           );
@@ -310,9 +310,10 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
           child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
             child: SizedBox(
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height - 45,
+              height: MediaQuery.sizeOf(context).height - 100.sp,
               child: Column(
                 children: [
                   const Spacer(flex: 4),
@@ -331,7 +332,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           //^ Settings Button
                           ProfileButtom(
-                            text: "Settings",
+                            text: "Settings".tr(),
                             icon: Icon(
                               Icons.settings,
                               size: 29.sp,
@@ -340,7 +341,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingsPage(),
+                                  builder: (context) => SettingsPage(
+                                    controller: widget.controller,
+                                  ),
                                 ),
                               );
                             },
@@ -352,7 +355,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           //^ Post an ad Button
                           ProfileButtom(
-                            text: "Post an ad",
+                            text: "Create Announcement".tr(),
                             icon: Icon(
                               Icons.add_to_photos_outlined,
                               size: 29.sp,
@@ -373,7 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           //^ My announcements Button
                           ProfileButtom(
-                            text: "My announcements",
+                            text: "My announcements".tr(),
                             icon: Icon(
                               Icons.web_stories_outlined,
                               size: 29.sp,
@@ -394,7 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           //^ Contact us Button
                           ProfileButtom(
-                            text: "Contact us",
+                            text: "Contact us".tr(),
                             icon: Icon(
                               Icons.email_outlined,
                               size: 29.sp,
@@ -410,7 +413,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           //^ Sign Out Button
                           ProfileButtom(
-                            text: "Sign Out",
+                            text: "Sign Out".tr(),
                             icon: Icon(
                               Icons.login,
                               size: 29.sp,
@@ -426,7 +429,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           //^ Delete account Button
                           ProfileButtom(
-                            text: "Delete account",
+                            text: "Delete account".tr(),
                             icon: Icon(
                               Icons.delete_outline,
                               size: 29.sp,

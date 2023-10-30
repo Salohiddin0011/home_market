@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/home_page.dart';
+import 'package:home_market/pages/main_page.dart';
 import 'package:home_market/pages/sign_up_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
@@ -29,7 +30,7 @@ class SignInPage extends StatelessWidget {
 
           if (state is SignInSuccess) {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomePage()));
+                MaterialPageRoute(builder: (context) => const MainPage()));
           }
         },
         child: SingleChildScrollView(

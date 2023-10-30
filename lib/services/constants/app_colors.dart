@@ -15,4 +15,5 @@ sealed class AppColors {
   static const Color ff2A2B3F = Color(0xff2A2B3F);
   static const Color ff8C8C8C = Color(0xff8C8C8C);
   static const Color ff006EFF = Color(0xff006EFF);
+  static const Color ff7D7D7D = Color(0xff7D7D7D);
 }

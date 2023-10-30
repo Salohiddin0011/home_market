@@ -1,14 +1,19 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/main.dart';
 
 import '../../services/constants/app_colors.dart';
 import '../../services/constants/app_str.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final PageController controller;
+
+  const SettingsPage({super.key, required this.controller});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -26,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
             appBar: AppBar(
               elevation: .0,
               title: Text(
-                'Settings',
+                'Settings'.tr(),
                 style: TextStyle(
                     fontSize: 19.sp,
                     color: hiveDb.isLight
@@ -39,9 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  context.read<LandingPageBloc>().add(TabChange(tabIndex: 0));
+                  widget.controller.jumpToPage(0);
                 },
                 icon: Icon(
-                  Icons.arrow_back,
+                  Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
                   color:
                       hiveDb.isLight ? AppColors.ffffffff : AppColors.ff000000,
                 ),
@@ -54,9 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Row(
                     children: [
                       Text(
-                        "Dark mode",
+                        "Dark mode".tr(),
                         style: TextStyle(
-                            fontSize: 15.sp,
+                            fontSize: 18.sp,
                             color: hiveDb.isLight
                                 ? AppColors.ffffffff
                                 : AppColors.ff122D4D,
@@ -67,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Switch.adaptive(
                           value: hiveDb.isLight,
                           activeColor: Platform.isAndroid
-                              ? AppColors.ff122D4D
+                              ? AppColors.ff006EFF
                               : AppColors.ff2BD358,
                           onChanged: (value) {
                             hiveDb.storeData(value);
@@ -75,12 +82,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
+                const Divider(),
+                SizedBox(height: 15.sp),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.sp),
                   child: Row(
                     children: [
                       Text(
-                        "Change language",
+                        "Change language".tr(),
                         style: TextStyle(
                             fontSize: 15.sp,
                             color: hiveDb.isLight
@@ -90,13 +99,42 @@ class _SettingsPageState extends State<SettingsPage> {
                             fontWeight: FontWeight.w500),
                       ),
                       const Spacer(flex: 1),
-                      const Icon(
+                      Icon(
                         Icons.language,
+                        size: 30.sp,
                       ),
                       const SizedBox(width: 15),
                     ],
                   ),
                 ),
+                ListTile(
+                  onTap: () {
+                    context.setLocale(const Locale('en', 'US'));
+                  },
+                  title: Text("English".tr()),
+                  trailing: Checkbox.adaptive(
+                      value: context.locale == const Locale('en', 'US'),
+                      onChanged: (value) {}),
+                ),
+                ListTile(
+                  onTap: () {
+                    context.setLocale(const Locale('ru', 'RU'));
+                  },
+                  title: Text("Russian".tr()),
+                  trailing: Checkbox.adaptive(
+                      value: context.locale == const Locale('ru', 'RU'),
+                      onChanged: (value) {}),
+                ),
+                ListTile(
+                  onTap: () {
+                    context.setLocale(const Locale('uz', 'UZ'));
+                  },
+                  title: Text("Uzbek".tr()),
+                  trailing: Checkbox.adaptive(
+                      value: context.locale == const Locale('uz', 'UZ'),
+                      onChanged: (value) {}),
+                ),
+                const Divider(),
               ],
             ),
           );

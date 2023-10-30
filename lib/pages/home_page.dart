@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                   text: TextSpan(
                 children: [
                   TextSpan(
-                    text: I18N.letsFind,
+                    text: I18N.letsFind.tr(),
                     style: TextStyle(
                         fontSize: 20.sp,
                         color: hiveDb.isLight
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w400),
                   ),
                   TextSpan(
-                    text: I18N.favHome,
+                    text: I18N.favHome.tr(),
                     style: TextStyle(
                         fontSize: 25.sp,
                         color: hiveDb.isLight
@@ -226,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                             color: hiveDb.isLight
                                 ? AppColors.ffffffff
                                 : AppColors.ff000000),
-                        hintText: "Search",
+                        hintText: "Search".tr(),
                         border: InputBorder.none,
                         errorBorder: OutlineInputBorder(
                             borderSide: BorderSide.none,
@@ -305,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                             left: 10.sp, bottom: 20.sp, top: 10.sp),
                         child: context.read<MainBloc>().state.items.isNotEmpty
                             ? Text(
-                                I18N.recomendations,
+                                I18N.recomendations.tr(),
                                 style: TextStyle(
                                   fontFamily: I18N.inter,
                                   fontSize: 23.sp,
@@ -468,7 +469,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            I18N.all,
+                            I18N.all.tr(),
                             style: TextStyle(
                               fontFamily: I18N.inter,
                               fontSize: 23.sp,
@@ -476,7 +477,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            I18N.more,
+                            I18N.more.tr(),
                             style: TextStyle(
                                 fontFamily: I18N.poppins,
                                 fontSize: 14.sp,
@@ -655,8 +656,8 @@ class _HomePageState extends State<HomePage> {
                                               ]),
                                     child: Text(
                                       post.isApartment
-                                          ? I18N.apartment
-                                          : I18N.house,
+                                          ? I18N.apartment.tr()
+                                          : I18N.house.tr(),
                                       style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,

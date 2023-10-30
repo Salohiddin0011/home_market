@@ -1,12 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/main.dart';
 import 'package:home_market/models/post_model.dart';
+import 'package:home_market/pages/map/google_map.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
+import 'package:home_market/views/info/desc_component.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+// ignore: must_be_immutable
 class DescriptionPage extends StatefulWidget {
   Post? post;
   DescriptionPage({required this.post, super.key});
@@ -29,160 +34,34 @@ class _DescriptionPageState extends State<DescriptionPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                height: 70.sp,
-                width: 77.sp,
-                padding: EdgeInsets.only(
-                  top: 10.sp,
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: const Color(0xff0000000D).withOpacity(0.2),
-                          blurRadius: 0,
-                          offset: const Offset(0, 0)),
-                      BoxShadow(
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                        color: const Color(0xff0000000D).withOpacity(0.2),
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      AppIcons.area,
-                      width: 20.sp,
-                      height: 15.sp,
-                      color: AppColors.ff006EFF,
-                    ),
-                    Text(
-                      widget.post!.area,
-                      style: TextStyle(
-                          fontSize: 11.sp,
-                          color: AppColors.ff006EFF,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: I18N.poppins),
-                    ),
-                    Text(
-                      "sqft",
-                      style: TextStyle(
-                          fontSize: 9.sp,
-                          fontFamily: I18N.poppins,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff6B6B6B)),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                height: 70.sp,
-                width: 77.sp,
-                padding: EdgeInsets.only(top: 10.sp),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: const Color(0xff0000000D).withOpacity(0.2),
-                          blurRadius: 0,
-                          offset: const Offset(0, 0)),
-                      BoxShadow(
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                        color: const Color(0xff0000000D).withOpacity(0.2),
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      AppIcons.rooms,
-                      width: 20.sp,
-                      height: 15.sp,
-                      color: AppColors.ff006EFF,
-                    ),
-                    Text(
-                      widget.post!.rooms,
-                      style: TextStyle(
-                          fontSize: 11.sp,
-                          color: AppColors.ff006EFF,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: I18N.poppins),
-                    ),
-                    Text(
-                      "Bedrooms",
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontSize: 9.sp,
-                          fontFamily: I18N.poppins,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff6B6B6B)),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                height: 70.sp,
-                width: 77.sp,
-                padding: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: const Color(0xff0000000D).withOpacity(0.2),
-                          blurRadius: 0,
-                          offset: const Offset(0, 0)),
-                      BoxShadow(
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                        color: const Color(0xff0000000D).withOpacity(0.2),
-                      )
-                    ]),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      AppIcons.bathroom,
-                      width: 20.sp,
-                      height: 15.sp,
-                      color: AppColors.ff006EFF,
-                    ),
-                    Text(
-                      widget.post!.bathrooms,
-                      style: TextStyle(
-                          fontSize: 11.sp,
-                          color: AppColors.ff006EFF,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: I18N.poppins),
-                    ),
-                    Text(
-                      "Bathrooms",
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontSize: 9.sp,
-                          fontFamily: I18N.poppins,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff6B6B6B)),
-                    )
-                  ],
-                ),
-              ),
+              DescriptionComponent(
+                  ammount: widget.post!.area,
+                  icon: AppIcons.area,
+                  place: "sqft".tr()),
+              DescriptionComponent(
+                  ammount: widget.post!.rooms,
+                  icon: AppIcons.rooms,
+                  place: 'Rooms'.tr()),
+              DescriptionComponent(
+                  ammount: widget.post!.bathrooms,
+                  icon: AppIcons.bathroom,
+                  place: "Bathrooms".tr())
             ],
           ),
         ),
-        const SizedBox(
-          height: 10,
+        SizedBox(
+          height: 10.sp,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 20.sp),
           child: Text(
-            "Listing Agent",
+            "Listing Agent".tr(),
             style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 fontFamily: I18N.poppins,
-                color: AppColors.ff2A2B3F),
+                color:
+                    hiveDb.isLight ? AppColors.ffffffff : AppColors.ff2A2B3F),
           ),
         ),
         SizedBox(height: 9.sp),
@@ -190,8 +69,20 @@ class _DescriptionPageState extends State<DescriptionPage> {
           padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 25.sp,
+              InkWell(
+                onTap: () {
+                  hiveDb.changeMode();
+                },
+                child: CircleAvatar(
+                  radius: 25.sp,
+                  child: Text(
+                    widget.post!.userName.substring(0, 1),
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(width: 8.sp),
               Column(
@@ -199,9 +90,11 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Sandeep S.",
+                    widget.post!.userName,
                     style: TextStyle(
-                      color: AppColors.ff2A2B3F,
+                      color: hiveDb.isLight
+                          ? AppColors.ff006EFF
+                          : AppColors.ff2A2B3F,
                       fontFamily: I18N.poppins,
                       fontWeight: FontWeight.w600,
                       fontSize: 15.sp,
@@ -209,7 +102,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                     ),
                   ),
                   Text(
-                    "Partner",
+                    "user".tr(),
                     style: TextStyle(
                       color: AppColors.ff8C8C8C,
                       fontFamily: I18N.poppins,
@@ -233,7 +126,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 },
                 icon: Image.asset(
                   AppIcons.email,
-                  width: 25,
+                  width: 25.sp,
                 ),
               ),
               IconButton(
@@ -246,7 +139,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 },
                 icon: Image.asset(
                   AppIcons.phone,
-                  width: 25,
+                  width: 25.sp,
                 ),
               ),
             ],
@@ -255,7 +148,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
         Padding(
           padding: const EdgeInsets.only(left: 20, top: 15),
           child: Text(
-            "Facilities",
+            "Facilities".tr(),
             style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
@@ -268,52 +161,55 @@ class _DescriptionPageState extends State<DescriptionPage> {
             children: [
               for (int i = 0; i < widget.post!.facilities.length; i++)
                 Container(
-                  height: 70.sp,
-                  width: 77.sp,
-                  margin: const EdgeInsets.only(right: 10, bottom: 15),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 8.sp, vertical: 10.sp),
+                  margin: EdgeInsets.only(right: 10.sp, top: 10.sp),
+                  padding: EdgeInsets.only(
+                      left: 10.sp, right: 10.sp, bottom: 10.sp, top: 5.sp),
+                  height: 65.sp,
+                  width: 85.sp,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: const Color(0xff0000000D).withOpacity(0.2),
-                            blurRadius: 0,
-                            offset: const Offset(0, 0)),
-                        BoxShadow(
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                          color: const Color(0xff0000000D).withOpacity(0.2),
-                        )
-                      ]),
+                    borderRadius: BorderRadius.all(Radius.circular(10.sp)),
+                    color: hiveDb.isLight
+                        ? AppColors.ff989898.withOpacity(.4)
+                        : AppColors.ffffffff,
+                    boxShadow: [
+                      !hiveDb.isLight
+                          ? BoxShadow(
+                              blurRadius: 12,
+                              offset: Offset(2.sp, 6.sp),
+                              color: AppColors.ff000000.withOpacity(.22),
+                            )
+                          : BoxShadow(
+                              blurRadius: 4,
+                              offset: Offset(1.sp, 1.sp),
+                              color: AppColors.ffffffff,
+                              blurStyle: BlurStyle.outer)
+                    ],
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Image.asset(
                         widget.post!.facilities[i].icon,
-                        width: 20.sp,
-                        height: 20.sp,
-                        color: AppColors.ff006EFF,
+                        height: 25.sp,
+                        color: hiveDb.isLight ? AppColors.ffffffff : null,
                       ),
                       Text(
-                        widget.post!.facilities[i].name,
-                        overflow: TextOverflow.ellipsis,
+                        widget.post!.facilities[i].name.tr(),
                         style: TextStyle(
-                          fontSize: 9.sp,
-                          fontFamily: I18N.poppins,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff6B6B6B),
-                        ),
-                        maxLines: 1,
-                      )
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: I18N.inter,
+                            color: hiveDb.isLight
+                                ? AppColors.ffffffff
+                                : AppColors.ff000000),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

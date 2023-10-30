@@ -7,6 +7,7 @@ import 'package:home_market/models/facilities_model.dart';
 import 'package:home_market/models/message_model.dart';
 import 'package:home_market/models/post_model.dart';
 import 'package:home_market/models/user_model.dart';
+import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/services/firebase/store_service.dart';
 
@@ -31,6 +32,10 @@ sealed class DBService {
       final child = folder.push();
       final id = child.key!;
       final userId = AuthService.user.uid;
+      final userName = AuthService.user.displayName;
+      // final lat = LatLong.lat;
+      // final long = LatLong.long;
+
       List<String> images = [];
 
       for (var i = 0; i < gridImages.length; i++) {
@@ -38,6 +43,9 @@ sealed class DBService {
         images.add(image);
       }
       final post = Post(
+          // lat: lat.toString(),
+          // long: long.toString(),
+          userName: userName!,
           gridImages: images,
           facilities: facilities,
           id: id,
@@ -97,14 +105,19 @@ sealed class DBService {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
       final userId = AuthService.user.uid;
+      final userName = AuthService.user.displayName;
       List<String> images = [];
       print(imagesUri);
       for (var i = 0; i < gridImages.length; i++) {
         final image = await StoreService.uploadFile(gridImages[i]!, postId);
         images.add(image);
       }
-
+      // final lat = LatLong.lat;
+      // final long = LatLong.long;
       final post = Post(
+          // lat: lat.toString(),
+          // long: long.toString(),
+          userName: userName!,
           gridImages: imagesUri ?? images,
           facilities: facilities,
           id: postId,

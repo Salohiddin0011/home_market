@@ -38,10 +38,11 @@ class UserNameEmail extends StatelessWidget {
                     fontFamily: I18N.poppins,
                     fontWeight: FontWeight.w600),
               ),
+              SizedBox(height: 6.sp),
               Text(
                 email ?? "email",
-                style: const TextStyle(
-                  fontSize: 13,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   height: 1,
                   fontFamily: I18N.poppins,
                 ),

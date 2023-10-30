@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:home_market/main.dart';
 
@@ -47,7 +48,7 @@ class _CommentTextFieldState extends State<CommentTextField> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                   border: InputBorder.none,
-                  hintText: 'Messenge',
+                  hintText: 'Message'.tr(),
                   hintStyle: TextStyle(
                       color: Colors.grey.shade500,
                       fontSize: 15,

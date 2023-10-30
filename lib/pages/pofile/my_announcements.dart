@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +24,7 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
   @override
   void initState() {
     super.initState();
-    context.read<MainBloc>().add(MyPostEvent());
+    context.read<MainBloc>().add(GetAllDataEvent());
   }
 
   @override
@@ -44,14 +46,14 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
             Navigator.pop(context);
           },
           icon: Icon(
-            Icons.arrow_back,
+            Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
             color: hiveDb.isLight ? AppColors.ffffffff : AppColors.ff000000,
           ),
         ),
       ),
       body: BlocBuilder<MainBloc, MainState>(
         buildWhen: (previous, current) {
-          return current is MyPostSuccess;
+          return current is FetchDataSuccess;
         },
         builder: (context, state) {
           return Stack(
@@ -89,7 +91,6 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
                   );
                 },
               ),
-              const Spacer(flex: 1),
               if (state is MainLoading)
                 const Center(
                   child: CircularProgressIndicator.adaptive(),
