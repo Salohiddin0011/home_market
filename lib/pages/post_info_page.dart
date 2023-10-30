@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 
@@ -14,6 +15,7 @@ import 'package:home_market/pages/post_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
+import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/views/comment_text_field.dart';
 import 'package:home_market/views/info/galery_page.dart';
 
@@ -121,7 +123,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: Align(
-                          alignment: Alignment(0.4.sp, 0),
+                          alignment: Alignment(0.5.sp, 0),
                           child: BlocBuilder<PostBloc, PostState>(
                               builder: (context, state) {
                             return GestureDetector(

@@ -30,6 +30,7 @@
  "Information about the building":"Информации о строении",
  "Area": "Площадь",
  "Price": "Цена",
+ "Car Parking": "Парковка",
  "Swimming": "Бассейн",
  "Restaurant": "Ресторан",
  "Wi-fi": "Wi-fi",
@@ -46,5 +47,15 @@
  "Delete account": "Удалить Акаунт",
  "English": "Английский язык",
  "Russian": "Русский язык",
- "Uzbek": "Узбекский язык"
+ "Uzbek": "Узбекский язык",
+ "Are you sure you want to sign out?": "Вы уверены что хотите выйти?",
+ "No": "Нет",
+ "Yes": "Да",
+ "Delete Account": "Удалить Акаунт",
+ "Do you want to delete account?": "Вы хотите удалить Акаунт?",
+ "Cancel":"Отменить",
+ "Confirm":"Подтвердить",
+ "Please confirm password to delete account.": "Пожалуйста подтвердите свой пароль чтобы удалить акаунт",
+ "Password":"Пароль",
+ "Delete": "Удалить"
 }

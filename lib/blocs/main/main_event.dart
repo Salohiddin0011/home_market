@@ -35,12 +35,10 @@ class MyPostEvent extends MainEvent {
 }
 
 class MyLikedEvent extends MainEvent {
-  final Post post;
-  final String userId;
-  const MyLikedEvent({required this.post, required this.userId});
+  const MyLikedEvent();
 
   @override
-  List<Object?> get props => [post, userId];
+  List<Object?> get props => [];
 }
 
 class ActivateRCEvent extends MainEvent {

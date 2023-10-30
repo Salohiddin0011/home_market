@@ -54,10 +54,11 @@ class PostIsApartmentEvent extends PostEvent {
 
 class DeletePostEvent extends PostEvent {
   final String postId;
-  const DeletePostEvent(this.postId);
+  final List<String> postImages;
+  const DeletePostEvent(this.postId, this.postImages);
 
   @override
-  List<Object?> get props => [postId];
+  List<Object?> get props => [postId, postImages];
 }
 
 class UpdatePostEvent extends PostEvent {

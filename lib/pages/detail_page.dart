@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,7 +97,7 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Create Announcement",
+          "Create Announcement".tr(),
           style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18.sp,
@@ -139,7 +140,7 @@ class _DetailPageState extends State<DetailPage> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'Tick if it is an Apartment',
+                                      'Tick if it is an Apartment'.tr(),
                                       style: TextStyle(
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w500,
@@ -171,7 +172,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 15.sp),
                               Text(
-                                "Some Photos related to your Announcement",
+                                "Some Photos related to your Announcement".tr(),
                                 style: TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w600,
@@ -238,7 +239,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     ],
                                             ),
                                             child: Text(
-                                              "Add Photos",
+                                              "Add Photos".tr(),
                                               style: TextStyle(
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w700,
@@ -271,7 +272,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 15.sp),
                               Text(
-                                'Name of the building or Location',
+                                'Name of the building or Location'.tr(),
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w600,
@@ -282,12 +283,12 @@ class _DetailPageState extends State<DetailPage> {
                               SizedBox(height: 10.sp),
                               CustomDetailTextField(
                                 controller: titleController,
-                                title: "Title",
+                                title: "Title".tr(),
                                 maxLines: 2,
                               ),
                               SizedBox(height: 10.sp),
                               Text(
-                                'Describe your House or Apartment',
+                                'Describe your House or Apartment'.tr(),
                                 style: TextStyle(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w600,
@@ -297,12 +298,12 @@ class _DetailPageState extends State<DetailPage> {
                               SizedBox(height: 10.sp),
                               CustomDetailTextField(
                                 controller: contentController,
-                                title: "Content",
+                                title: "Content".tr(),
                                 maxLines: 10,
                               ),
                               SizedBox(height: 20.sp),
                               Text(
-                                'Information about the building',
+                                'Information about the building'.tr(),
                                 style: TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w700,
@@ -314,19 +315,20 @@ class _DetailPageState extends State<DetailPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   AboutBuilding(
-                                      name: "Area", controller: areaController),
+                                      name: "Area".tr(),
+                                      controller: areaController),
                                   AboutBuilding(
-                                    name: "Rooms",
+                                    name: "Rooms".tr(),
                                     controller: roomsController,
                                     isRoom: true,
                                   ),
                                   AboutBuilding(
-                                    name: "Bathrooms",
+                                    name: "Bathrooms".tr(),
                                     controller: bathRoomsController,
                                     isBath: true,
                                   ),
                                   AboutBuilding(
-                                    name: "Price",
+                                    name: "Price".tr(),
                                     controller: priceController,
                                     isPrice: true,
                                   ),
@@ -334,7 +336,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 20.sp),
                               Text(
-                                'Facilities',
+                                'Facilities'.tr(),
                                 style: TextStyle(
                                     color: AppColors.ff016FFF,
                                     fontSize: 20.sp,
@@ -350,12 +352,13 @@ class _DetailPageState extends State<DetailPage> {
                                           facilities: facilities,
                                           facility: Facilities(
                                               icon: facilitiesIcons[i],
-                                              name: facilitiesName[i]),
+                                              name: facilitiesName[i].tr()),
                                           onTap: () {
                                             final Facilities newFacility =
                                                 Facilities(
                                                     icon: facilitiesIcons[i],
-                                                    name: facilitiesName[i]);
+                                                    name:
+                                                        facilitiesName[i].tr());
                                             context.read<PostBloc>().add(
                                                 FacilitiesPostEvent(
                                                     facilities: facilities,
@@ -366,7 +369,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 30.sp),
                               Text(
-                                'Phone Number',
+                                'Phone Number'.tr(),
                                 style: TextStyle(
                                     color: AppColors.ff016FFF,
                                     fontSize: 20.sp,
@@ -377,7 +380,7 @@ class _DetailPageState extends State<DetailPage> {
                               CustomDetailTextField(
                                 inputFormatter: true,
                                 controller: phoneCtrl,
-                                title: "Enter your Phone Number",
+                                title: "Enter your Phone Number".tr(),
                                 maxLines: 1,
                               ),
                               GestureDetector(
@@ -396,7 +399,8 @@ class _DetailPageState extends State<DetailPage> {
                                                 ? AppColors.ff000000
                                                 : AppColors.ffffffff,
                                             content: Text(
-                                              'Plese fill all the field before pushing your Announcement',
+                                              'Plese fill all the field before pushing your Announcement'
+                                                  .tr(),
                                               style: TextStyle(
                                                   fontSize: 18.sp,
                                                   fontWeight: FontWeight.w700,

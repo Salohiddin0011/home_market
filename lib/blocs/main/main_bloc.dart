@@ -49,8 +49,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   void _myLiked(MyLikedEvent event, Emitter emit) async {
     emit(MainLoading(state.items));
     try {
-      final list =
-          await DBService.likedPost(post: event.post, userId: event.userId);
+      final list = await DBService.likedPost();
       emit(MyLikedSuccess(list));
     } catch (e) {
       emit(MainFailure(state.items, "Something error, try again later"));

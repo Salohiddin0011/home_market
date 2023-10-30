@@ -62,7 +62,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
   void _deletePost(DeletePostEvent event, Emitter emit) async {
     emit(PostLoading());
-    final result = await DBService.deletePost(event.postId);
+    final result = await DBService.deletePost(event.postId, event.postImages);
 
     if (result) {
       emit(DeletePostSuccess());

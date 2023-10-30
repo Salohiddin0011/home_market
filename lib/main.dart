@@ -14,14 +14,16 @@ void main() async {
   );
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  runApp(EasyLocalization(
-    supportedLocales: const [
-      Locale('en', 'US'),
-      Locale('uz', 'UZ'),
-      Locale('ru', 'RU')
-    ],
-    path: 'assets/translations',
-    fallbackLocale: const Locale('en', 'US'),
-    child: const HomeMarketApp(),
-  ));
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('uz', 'UZ'),
+        Locale('ru', 'RU')
+      ],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en', 'US'),
+      child: const HomeMarketApp(),
+    ),
+  );
 }

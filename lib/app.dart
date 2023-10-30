@@ -9,6 +9,7 @@ import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/main_page.dart';
+import 'package:home_market/pages/onboarding_page.dart';
 import 'package:home_market/pages/sign_in_page.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 

@@ -30,6 +30,7 @@
  "Information about the building":"Uy haqida malumotlar",
  "Area": "Hudud",
  "Price": "Narx",
+ "Car Parking": "Avto joy",
  "Swimming": "Basseyn",
  "Restaurant": "Restaran",
  "Wi-fi": "Wi-fi",
@@ -46,5 +47,15 @@
  "English": "Ingliz Tili",
  "Russian": "Rus Tili",
  "Uzbek": "O'zbek Tili",
- "Delete account": "Akauntni Ochirib tashlash"
+ "Delete account": "Akauntni Ochirib tashlash",
+ "Are you sure you want to sign out?": "Siz chiqishingiz uchun aminmisiz?",
+ "No": "Yoq",
+ "Yes": "Ha",
+ "Delete Account": "Akauntni o'chirish",
+ "Do you want to delete account?": "Siz Akauntni ochirishni hohlaysizmi?",
+ "Cancel":"Ortga",
+ "Confirm":"Tasdiqlash",
+ "Please confirm password to delete account.": "Iltimos Akauntni o'chirish uchun parolongizni tasdiqlang",
+ "Password":"Parol",
+ "Delete": "O'chirish"
 }

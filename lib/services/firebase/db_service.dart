@@ -39,7 +39,7 @@ sealed class DBService {
       List<String> images = [];
 
       for (var i = 0; i < gridImages.length; i++) {
-        final image = await StoreService.uploadFile(gridImages[i]!, id);
+        final image = await StoreService.uploadFile(gridImages[i]!);
         images.add(image);
       }
       final post = Post(
@@ -80,10 +80,11 @@ sealed class DBService {
         .toList();
   }
 
-  static Future<bool> deletePost(String postId) async {
+  static Future<bool> deletePost(String postId, List<String> imagePath) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
       await fbPost.remove();
+      await StoreService.removeFiles(imagePath);
       return true;
     } catch (e) {
       return false;
@@ -111,7 +112,7 @@ sealed class DBService {
       List<String> images = [];
       print(imagesUri);
       for (var i = 0; i < gridImages.length; i++) {
-        final image = await StoreService.uploadFile(gridImages[i]!, postId);
+        final image = await StoreService.uploadFile(gridImages[i]!);
         images.add(image);
       }
       // final lat = LatLong.lat;
@@ -237,21 +238,19 @@ sealed class DBService {
     }
   }
 
-  static Future<List<Post>> likedPost({
-    required Post post,
-    required String userId,
-  }) async {
+  static Future<List<Post>> likedPost() async {
     try {
-      final folder = db.ref(Folder.post).child(post.id);
-      final event = await folder.orderByChild("isLiked").once();
-      final json = jsonDecode(jsonEncode(event.snapshot.value)) as List;
-      debugPrint("JSON: ${json}");
-      print('111111111111');
-      final data =
-          json.map((e) => Post.fromJson(e as Map<String, Object?>)).toList();
-      print('2222222222');
+      //.child(post.id).child("isLiked")
+      final folder = db.ref(Folder.post);
+      final event = await folder.get();
+      final json = jsonDecode(jsonEncode(event.value)) as Map;
+      final data = json.values
+          .map((e) => Post.fromJson(e as Map<String, Object?>))
+          .toList();
 
-      return data.where((element) => element.isLiked.contains(userId)).toList();
+      return data
+          .where((element) => element.isLiked.contains(AuthService.user.uid))
+          .toList();
     } catch (e) {
       debugPrint("ERROR: $e");
       return [];

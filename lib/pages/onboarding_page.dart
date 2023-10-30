@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/views/intro/bottom_sheet.dart';
 import 'package:home_market/views/intro/intros.dart';
 
@@ -60,30 +61,49 @@ class _IntroPageState extends State<IntroPage>
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: PageView(
-            controller: controller,
-            children: const [
-              Intro(
-                  image: 'assets/images/intro_image_3.png',
-                  str1: 'Lorem ',
-                  str2: 'Ipsum is simply\n',
-                  str3: 'dummy text printing',
-                  str4:
-                      "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
-              Intro(
-                  image: 'assets/images/intro_image_1.png',
-                  str1: 'Lorem ',
-                  str2: 'Ipsum is simply\n',
-                  str3: 'dummy text printing',
-                  str4:
-                      "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
-              Intro(
-                  image: 'assets/images/intro_image_2.png',
-                  str1: 'Lorem ',
-                  str2: 'Ipsum is simply\n',
-                  str3: 'dummy text printing',
-                  str4:
-                      "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              PageView(
+                controller: controller,
+                children: const [
+                  Intro(
+                      image: 'assets/images/intro_image_3.png',
+                      str1: 'Lorem ',
+                      str2: 'Ipsum is simply\n',
+                      str3: 'dummy text printing',
+                      str4:
+                          "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
+                  Intro(
+                      image: 'assets/images/intro_image_1.png',
+                      str1: 'Lorem ',
+                      str2: 'Ipsum is simply\n',
+                      str3: 'dummy text printing',
+                      str4:
+                          "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
+                  Intro(
+                      image: 'assets/images/intro_image_2.png',
+                      str1: 'Lorem ',
+                      str2: 'Ipsum is simply\n',
+                      str3: 'dummy text printing',
+                      str4:
+                          "Lorem Ipsum is simply dummy text of the\nprinting and typesetting industry."),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  controller.animateToPage(3,
+                      duration: const Duration(milliseconds: 700),
+                      curve: Curves.linear);
+                },
+                child: const Text(
+                  'Skip',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.ff006EFF),
+                ),
+              ),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:home_market/pages/post_info_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
+import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/views/area_rooms.dart';
 
@@ -21,6 +22,7 @@ class MyLikePage extends StatefulWidget {
 class _MyLikePageState extends State<MyLikePage> {
   @override
   void initState() {
+    context.read<MainBloc>().add(const MyLikedEvent());
     super.initState();
   }
 
@@ -40,9 +42,13 @@ class _MyLikePageState extends State<MyLikePage> {
 
                 if (post.isLiked.contains(AuthService.user.uid)) {
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                    onTap: () async {
+                      fromIsLiked = true;
+                      await Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => InfoPage(post: post)));
+                      if (mounted) {
+                        context.read<MainBloc>().add(const MyLikedEvent());
+                      }
                     },
                     child: Stack(
                       alignment: Alignment(0.9.sp, -1.sp),

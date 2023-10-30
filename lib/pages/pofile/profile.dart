@@ -54,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 AlertDialog(
                   backgroundColor: const Color(0xffF9FBFF),
                   title: Text(
-                    I18N.deleteAccount,
+                    I18N.deleteAccount.tr(),
                     style: TextStyle(
                         fontSize: 18.sp,
                         color: AppColors.ff122D4D,
@@ -66,8 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Text(
                         state is DeleteConfirmSuccess
-                            ? I18N.requestPassword
-                            : I18N.deleteAccountWarning,
+                            ? I18N.requestPassword.tr()
+                            : I18N.deleteAccountWarning.tr(),
                         style: TextStyle(
                             fontSize: 15.sp,
                             color: AppColors.ff8997A9,
@@ -81,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         TextField(
                           controller: controller,
                           decoration:
-                              const InputDecoration(hintText: I18N.password),
+                              InputDecoration(hintText: I18N.password.tr()),
                         ),
                     ],
                   ),
@@ -96,7 +96,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(I18N.cancel),
+                      child: Text(I18N.cancel.tr(),
+                          style: TextStyle(color: AppColors.ffffffff)),
                     ),
 
                     /// #confirm #delete
@@ -116,9 +117,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               .add(const DeleteConfirmEvent());
                         }
                       },
-                      child: Text(state is DeleteConfirmSuccess
-                          ? I18N.delete
-                          : I18N.confirm),
+                      child: Text(
+                          state is DeleteConfirmSuccess
+                              ? I18N.delete.tr()
+                              : I18N.confirm.tr(),
+                          style: TextStyle(color: AppColors.ffffffff)),
                     ),
                   ],
                 ),
@@ -246,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
           return AlertDialog.adaptive(
             title: Center(
               child: Text(
-                "Are you sure you want to sign out?",
+                "Are you sure you want to sign out?".tr(),
                 style: TextStyle(
                     fontSize: 15.sp,
                     color: AppColors.ff122D4D,
@@ -266,7 +269,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () async {
                         Navigator.pop(context);
                       },
-                      child: const Text("No")),
+                      child: Text("No".tr(),
+                          style: TextStyle(color: AppColors.ffffffff))),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         elevation: .0,
@@ -275,7 +279,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () async {
                         ctx.read<AuthBloc>().add(const SignOutEvent());
                       },
-                      child: const Text("Yes")),
+                      child: Text(
+                        "Yes".tr(),
+                        style: TextStyle(color: AppColors.ffffffff),
+                      )),
                 ],
               ),
             ],
