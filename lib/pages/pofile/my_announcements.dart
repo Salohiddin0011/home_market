@@ -24,7 +24,7 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
   @override
   void initState() {
     super.initState();
-    context.read<MainBloc>().add(GetAllDataEvent());
+    context.read<MainBloc>().add(MyPostEvent());
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  bool like = false;
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -321,6 +323,20 @@ class _HomePageState extends State<HomePage> {
                                 itemCount: state.items.length,
                                 itemBuilder: (context, index, realIndex) {
                                   final post = state.items[index];
+                                  void likeCheck(String uid) {
+                                    if (post.isLiked.contains(uid)) {
+                                      post.isLiked.remove(uid);
+                                      if (!post.isLiked.contains(uid)) {
+                                        like = false;
+                                      }
+                                    } else {
+                                      post.isLiked.add(uid);
+                                      if (post.isLiked.contains(uid)) {
+                                        like = true;
+                                      }
+                                    }
+                                  }
+
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: hiveDb.isLight
@@ -422,10 +438,6 @@ class _HomePageState extends State<HomePage> {
                                                               .ff016FFF,
                                                         ),
                                                       ),
-                                                      Icon(
-                                                        Icons.favorite_outline,
-                                                        size: 25.sp,
-                                                      )
                                                     ],
                                                   ),
                                                 ),

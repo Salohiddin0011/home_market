@@ -73,9 +73,11 @@ class UpdatePostEvent extends PostEvent {
   final String rooms;
   final List<File?> gridImages;
   final List<String>? imagesUri;
+  final List<String> isLiked;
 
   const UpdatePostEvent(
       {required this.title,
+      required this.isLiked,
       required this.content,
       required this.facilities,
       required this.area,
@@ -101,7 +103,55 @@ class UpdatePostEvent extends PostEvent {
         postId,
         gridImages,
         facilities,
-        imagesUri
+        imagesUri,
+        isLiked,
+      ];
+}
+
+class UpdateLikePostEvent extends PostEvent {
+  final String postId;
+  final String title;
+  final String content;
+  final List<Facilities> facilities;
+  final String area;
+  final String bathrooms;
+  final bool isApartment;
+  final List<String> isLiked;
+
+  final String phone;
+  final String price;
+  final String rooms;
+  final List<String> gridImages;
+
+  const UpdateLikePostEvent({
+    required this.title,
+    required this.content,
+    required this.facilities,
+    required this.area,
+    required this.bathrooms,
+    required this.isApartment,
+    required this.isLiked,
+    required this.phone,
+    required this.price,
+    required this.rooms,
+    required this.postId,
+    required this.gridImages,
+  });
+
+  @override
+  List<Object?> get props => [
+        title,
+        content,
+        area,
+        bathrooms,
+        isApartment,
+        isLiked,
+        phone,
+        price,
+        rooms,
+        postId,
+        gridImages,
+        facilities,
       ];
 }
 

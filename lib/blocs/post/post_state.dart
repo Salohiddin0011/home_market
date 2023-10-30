@@ -37,6 +37,11 @@ class UpdatePostSuccess extends PostState {
   List<Object> get props => [];
 }
 
+class UpdateLikePostSuccess extends PostState {
+  @override
+  List<Object> get props => [];
+}
+
 class PostIsApartmentState extends PostState {
   final bool isApartment;
 

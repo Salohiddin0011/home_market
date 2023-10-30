@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,12 +37,27 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
     super.initState();
   }
 
+  void likeCheck(String uid) {
+    if (widget.post!.isLiked.contains(uid)) {
+      widget.post!.isLiked.remove(uid);
+      if (!widget.post!.isLiked.contains(uid)) {
+        like = false;
+      }
+    } else {
+      widget.post!.isLiked.add(uid);
+      if (widget.post!.isLiked.contains(uid)) {
+        like = true;
+      }
+    }
+  }
+
   @override
   void dispose() {
     controllerT.dispose();
     super.dispose();
   }
 
+  bool like = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +74,13 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      margin: EdgeInsets.all(5.sp),
+                      margin: EdgeInsets.only(
+                          left: 12.sp, bottom: 5.sp, top: 5.sp, right: 5.sp),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.ffffffff,
+                        color: hiveDb.isLight
+                            ? AppColors.ff989898
+                            : AppColors.ffffffff,
                         boxShadow: [
                           BoxShadow(
                               blurRadius: 2,
@@ -70,19 +90,23 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                       ),
                       child: Align(
                         alignment: Platform.isIOS
-                            ? Alignment(0.4.sp, 0)
+                            ? Alignment(0.7.sp, 0)
                             : Alignment(0.sp, 0),
                         child: Icon(
                           Platform.isAndroid
                               ? Icons.arrow_back
                               : Icons.arrow_back_ios,
-                          color: AppColors.ff000000.withOpacity(.7),
+                          size: 25.sp,
+                          color: hiveDb.isLight
+                              ? AppColors.ffffffff
+                              : AppColors.ff000000.withOpacity(.7),
                         ),
                       ),
                     ),
                   ),
                   actions: [
                     Container(
+                      padding: EdgeInsets.all(8.sp),
                       margin: EdgeInsets.all(5.sp),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -97,16 +121,51 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: Align(
-                        alignment: Alignment(0.4.sp, 0),
-                        child: Image.asset(
-                          AppIcons.circleShare,
-                          height: 40.sp,
-                          width: 40.sp,
-                        ),
-                      ),
+                          alignment: Alignment(0.4.sp, 0),
+                          child: BlocBuilder<PostBloc, PostState>(
+                              builder: (context, state) {
+                            return GestureDetector(
+                                onTap: () {
+                                  likeCheck(
+                                      FirebaseAuth.instance.currentUser!.uid);
+                                  context
+                                      .read<PostBloc>()
+                                      .add(UpdateLikePostEvent(
+                                        title: widget.post!.title,
+                                        content: widget.post!.content,
+                                        facilities: widget.post!.facilities,
+                                        area: widget.post!.area,
+                                        bathrooms: widget.post!.bathrooms,
+                                        isApartment: widget.post!.isApartment,
+                                        isLiked: widget.post!.isLiked,
+                                        phone: widget.post!.phone,
+                                        price: widget.post!.price,
+                                        rooms: widget.post!.rooms,
+                                        postId: widget.post!.id,
+                                        gridImages: widget.post!.gridImages,
+                                      ));
+                                },
+                                child: widget.post!.isLiked.contains(
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                    ? Icon(
+                                        Icons.favorite,
+                                        color: hiveDb.isLight
+                                            ? AppColors.ffffffff
+                                            : Colors.red,
+                                        size: 25.sp,
+                                      )
+                                    : Icon(
+                                        Icons.favorite_outline,
+                                        size: 25.sp,
+                                        color: hiveDb.isLight
+                                            ? AppColors.ffffffff
+                                            : AppColors.ff000000,
+                                      ));
+                          })),
                     ),
                     Container(
-                      margin: EdgeInsets.all(5.sp),
+                      margin: EdgeInsets.only(
+                          right: 10.sp, left: 5.sp, top: 5.sp, bottom: 5.sp),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: hiveDb.isLight
@@ -121,10 +180,15 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                       ),
                       child: Align(
                         alignment: Alignment(0.4.sp, 0),
-                        child: Image.asset(
-                          AppIcons.circleLike,
-                          height: 40.sp,
-                          width: 40.sp,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0.sp),
+                          child: Icon(
+                            Platform.isIOS ? CupertinoIcons.share : Icons.share,
+                            size: 25.sp,
+                            color: hiveDb.isLight
+                                ? AppColors.ffffffff
+                                : AppColors.ff000000,
+                          ),
                         ),
                       ),
                     ),

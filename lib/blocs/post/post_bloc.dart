@@ -18,6 +18,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<ViewGridImagesPostEvent>(_viewGridImages);
     on<PostIsApartmentEvent>(_changeIsApartment);
     on<FacilitiesPostEvent>(_facilities);
+    on<UpdateLikePostEvent>(_updateLikePost);
   }
 
   void _changeIsApartment(PostIsApartmentEvent event, Emitter emit) {
@@ -73,6 +74,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   void _updatePost(UpdatePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.updatePost(
+      isLiked: event.isLiked,
       imagesUri: event.imagesUri,
       gridImages: event.gridImages,
       postId: event.postId,
@@ -88,6 +90,29 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     );
     if (result) {
       emit(UpdatePostSuccess());
+    } else {
+      emit(const PostFailure("Something error, tyr again later!!!"));
+    }
+  }
+
+  void _updateLikePost(UpdateLikePostEvent event, Emitter emit) async {
+    emit(PostLoading());
+    final result = await DBService.updateLikePost(
+      gridImages: event.gridImages,
+      postId: event.postId,
+      title: event.title,
+      content: event.content,
+      facilities: event.facilities,
+      area: event.area,
+      bathrooms: event.bathrooms,
+      isApartment: event.isApartment,
+      isLiked: event.isLiked,
+      phone: event.phone,
+      price: event.price,
+      rooms: event.rooms,
+    );
+    if (result) {
+      emit(UpdateLikePostSuccess());
     } else {
       emit(const PostFailure("Something error, tyr again later!!!"));
     }

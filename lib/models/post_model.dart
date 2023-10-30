@@ -15,6 +15,7 @@ class Post {
   final String rooms;
   final String bathrooms;
   final bool isApartment;
+  List<String> isLiked;
   //! Facilities
   List<Facilities> facilities;
   final bool isMe;
@@ -28,6 +29,7 @@ class Post {
   Post({
     this.isMe = false,
     required this.facilities,
+    required this.isLiked,
     required this.id,
     required this.title,
     required this.content,
@@ -75,6 +77,7 @@ class Post {
               .map((e) => Facilities.fromJson(e as Map<String, Object?>))
               .toList()
           : [],
+      isLiked: (json['isLiked'] as List).map((e) => e as String).toList(),
     );
   }
 
@@ -95,6 +98,7 @@ class Post {
         "rooms": rooms,
         "facilities": facilities.map((e) => e.toJson()).toList(),
         "userName": userName,
+        "isLiked": isLiked,
         // "lat": lat,
         // "long": long
       };

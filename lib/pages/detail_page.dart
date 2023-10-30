@@ -466,6 +466,7 @@ class _DetailPageState extends State<DetailPage> {
                                     print("IMAGES = $images");
                                     context.read<PostBloc>().add(
                                         UpdatePostEvent(
+                                            isLiked: widget.post!.isLiked,
                                             imagesUri: images,
                                             gridImages: files,
                                             postId: widget.post!.id,

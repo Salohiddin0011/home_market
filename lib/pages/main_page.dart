@@ -5,6 +5,7 @@ import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/detail_page.dart';
 import 'package:home_market/pages/home_page.dart';
+import 'package:home_market/pages/my_like_page.dart';
 import 'package:home_market/pages/pofile/profile.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/data.dart';
@@ -57,7 +58,7 @@ class _MainPageState extends State<MainPage> {
               children: [
                 const HomePage(),
                 const HomePage(),
-                const HomePage(),
+                const MyLikePage(),
                 ProfilePage(controller: controller),
               ],
             ),

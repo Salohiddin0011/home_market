@@ -50,3 +50,10 @@ class MyPostSuccess extends MainState {
   @override
   List<Object> get props => [items];
 }
+
+class MyLikedSuccess extends MainState {
+  const MyLikedSuccess(super.items);
+
+  @override
+  List<Object> get props => [items];
+}

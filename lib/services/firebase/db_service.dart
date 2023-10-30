@@ -45,6 +45,7 @@ sealed class DBService {
       final post = Post(
           // lat: lat.toString(),
           // long: long.toString(),
+          isLiked: ['isLiked'],
           userName: userName!,
           gridImages: images,
           facilities: facilities,
@@ -100,6 +101,7 @@ sealed class DBService {
       required String price,
       required String rooms,
       required List<Facilities> facilities,
+      required List<String> isLiked,
       required List<File?> gridImages,
       List<String>? imagesUri}) async {
     try {
@@ -118,6 +120,7 @@ sealed class DBService {
           // lat: lat.toString(),
           // long: long.toString(),
           userName: userName!,
+          isLiked: isLiked,
           gridImages: imagesUri ?? images,
           facilities: facilities,
           id: postId,
@@ -130,6 +133,51 @@ sealed class DBService {
           bathrooms: bathrooms,
           email: AuthService.user.email!,
           isApartment: isApartment,
+          phone: phone,
+          price: price,
+          rooms: rooms);
+      await fbPost.update(post.toJson());
+
+      return true;
+    } catch (e) {
+      debugPrint("DB ERROR: $e ");
+      return false;
+    }
+  }
+
+  static Future<bool> updateLikePost(
+      {required String postId,
+      required String title,
+      required String content,
+      required String area,
+      required String bathrooms,
+      required bool isApartment,
+      required List<String> isLiked,
+      required String phone,
+      required String price,
+      required String rooms,
+      required List<Facilities> facilities,
+      required List<String> gridImages,
+      List<String>? imagesUri}) async {
+    try {
+      final fbPost = db.ref(Folder.post).child(postId);
+      final userId = AuthService.user.uid;
+
+      final post = Post(
+          userName: AuthService.user.displayName!,
+          gridImages: gridImages,
+          facilities: facilities,
+          id: postId,
+          title: title,
+          content: content,
+          userId: userId,
+          createdAt: DateTime.now(),
+          comments: [],
+          area: area,
+          bathrooms: bathrooms,
+          email: AuthService.user.email!,
+          isApartment: isApartment,
+          isLiked: isLiked,
           phone: phone,
           price: price,
           rooms: rooms);
@@ -183,6 +231,27 @@ sealed class DBService {
       return json.values
           .map((e) => Post.fromJson(e as Map<String, Object?>, isMe: true))
           .toList();
+    } catch (e) {
+      debugPrint("ERROR: $e");
+      return [];
+    }
+  }
+
+  static Future<List<Post>> likedPost({
+    required Post post,
+    required String userId,
+  }) async {
+    try {
+      final folder = db.ref(Folder.post).child(post.id);
+      final event = await folder.orderByChild("isLiked").once();
+      final json = jsonDecode(jsonEncode(event.snapshot.value)) as List;
+      debugPrint("JSON: ${json}");
+      print('111111111111');
+      final data =
+          json.map((e) => Post.fromJson(e as Map<String, Object?>)).toList();
+      print('2222222222');
+
+      return data.where((element) => element.isLiked.contains(userId)).toList();
     } catch (e) {
       debugPrint("ERROR: $e");
       return [];

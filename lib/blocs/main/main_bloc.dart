@@ -11,6 +11,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<GetAllDataEvent>(_fetchAllPost);
     on<SearchMainEvent>(_searchPost);
     on<MyPostEvent>(_myPost);
+    on<MyLikedEvent>(_myLiked);
   }
 
   void _fetchAllPost(GetAllDataEvent event, Emitter emit) async {
@@ -40,6 +41,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     try {
       final list = await DBService.myPost();
       emit(MyPostSuccess(list));
+    } catch (e) {
+      emit(MainFailure(state.items, "Something error, try again later"));
+    }
+  }
+
+  void _myLiked(MyLikedEvent event, Emitter emit) async {
+    emit(MainLoading(state.items));
+    try {
+      final list =
+          await DBService.likedPost(post: event.post, userId: event.userId);
+      emit(MyLikedSuccess(list));
     } catch (e) {
       emit(MainFailure(state.items, "Something error, try again later"));
     }
