@@ -23,7 +23,7 @@ class CustomBottomSheet extends StatelessWidget {
                 spacing: 7.sp,
                 dotWidth: 10.sp,
                 dotHeight: 10.sp,
-                dotColor: Color(0xffD2E0FF),
+                dotColor: const Color(0xffD2E0FF),
                 activeDotColor: AppColors.ff006EFF,
                 type: WormType.normal,
               ),

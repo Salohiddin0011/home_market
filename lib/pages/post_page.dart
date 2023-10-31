@@ -21,12 +21,14 @@ class CommentPage extends StatefulWidget {
 
 class _CommentPageState extends State<CommentPage> {
   getSenderView(CustomClipper clipper, BuildContext context, String messenge,
-          String userName, String time) =>
+          String time) =>
       ChatBubble(
         margin: EdgeInsets.only(bottom: 20.sp),
         clipper: clipper,
         alignment: Alignment.topRight,
-        backGroundColor: AppColors.ff016FFF,
+        backGroundColor: hiveDb.isLight
+            ? AppColors.ff000000.withOpacity(.7)
+            : AppColors.ff016FFF,
         child: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.7,
@@ -36,16 +38,9 @@ class _CommentPageState extends State<CommentPage> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                userName,
-                style: TextStyle(
-                    color: AppColors.ff122D4D,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
                 messenge,
                 style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.ffffffff,
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500),
               ),
@@ -53,7 +48,7 @@ class _CommentPageState extends State<CommentPage> {
                 time,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  color: Colors.black,
+                  color: AppColors.ffffffff,
                 ),
               ),
             ],
@@ -63,43 +58,58 @@ class _CommentPageState extends State<CommentPage> {
 
   getReceiverView(CustomClipper clipper, BuildContext context, String messenge,
           String userName, String time) =>
-      ChatBubble(
-        clipper: clipper,
-        backGroundColor: const Color(0xffE7E7ED),
-        margin: const EdgeInsets.only(bottom: 20),
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.7,
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          CircleAvatar(
+            radius: 20.sp,
+            child: Text(
+              widget.post.userName.substring(0, 1),
+              style: TextStyle(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                userName,
-                style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w600),
+          ChatBubble(
+            clipper: clipper,
+            backGroundColor: const Color(0xffE7E7ED),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
               ),
-              Text(
-                messenge,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w500),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userName,
+                    style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    messenge,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 4.sp),
+                  Text(
+                    time,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 4.sp),
-              Text(
-                time,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: Colors.blueGrey,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       );
 
   @override
@@ -129,7 +139,7 @@ class _CommentPageState extends State<CommentPage> {
                     widget.post.comments = current.comments;
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: current.comments.length,
                       itemBuilder: (context, index) {
                         final msg = current.comments[index];
@@ -139,7 +149,6 @@ class _CommentPageState extends State<CommentPage> {
                             ChatBubbleClipper2(type: BubbleType.sendBubble),
                             context,
                             msg.message,
-                            msg.username,
                             "${msg.writtenAt.hour}:${msg.writtenAt.minute}",
                           );
                         }

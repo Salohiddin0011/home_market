@@ -7,8 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
+import 'package:home_market/pages/detail_page.dart';
+import 'package:home_market/pages/post_info_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
-import 'package:home_market/services/firebase/store_service.dart';
 import 'package:home_market/views/profile/my_card.dart';
 
 import '../../blocs/main/main_bloc.dart';
@@ -82,11 +83,34 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
                                 backgroundColor: const Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete,
-                              )
+                              ),
+                              SlidableAction(
+                                onPressed: (context) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DetailPage(
+                                                post: post,
+                                              )));
+                                },
+                                backgroundColor: AppColors.ff006EFF,
+                                foregroundColor: Colors.white,
+                                icon: Icons.change_circle_outlined,
+                              ),
                             ],
                           ),
-                          child: MyCard(
-                            post: post,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => InfoPage(
+                                            post: post,
+                                          )));
+                            },
+                            child: MyCard(
+                              post: post,
+                            ),
                           ),
                         ),
                       ],

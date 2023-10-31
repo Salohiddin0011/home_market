@@ -1,25 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
-import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
-import 'package:home_market/pages/detail_page.dart';
+import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/post_info_page.dart';
-import 'package:home_market/pages/post_page.dart';
-import 'package:home_market/pages/sign_in_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
-import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/views/area_rooms.dart';
-import 'package:home_market/views/bottom_appbar_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -127,6 +121,7 @@ class _HomePageState extends State<HomePage> {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               forceMaterialTransparency: true,
               toolbarHeight: 100.sp,
               centerTitle: false,
@@ -159,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                 if (AuthService.user.photoURL == null)
                   InkWell(
                     onTap: () {
-                      context.read<AuthBloc>().add(SignOutEvent());
+                      context.read<AuthBloc>().add(const SignOutEvent());
                     },
                     child: CircleAvatar(
                       radius: 30.sp,
@@ -315,160 +310,152 @@ class _HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               )
-                            : SizedBox.shrink()),
+                            : const SizedBox.shrink()),
                     Stack(
                       children: [
-                        state.items.isNotEmpty
-                            ? CarouselSlider.builder(
-                                itemCount: state.items.length,
-                                itemBuilder: (context, index, realIndex) {
-                                  final post = state.items[index];
-                                  void likeCheck(String uid) {
-                                    if (post.isLiked.contains(uid)) {
-                                      post.isLiked.remove(uid);
-                                      if (!post.isLiked.contains(uid)) {
-                                        like = false;
-                                      }
-                                    } else {
-                                      post.isLiked.add(uid);
-                                      if (post.isLiked.contains(uid)) {
-                                        like = true;
-                                      }
-                                    }
-                                  }
-
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: hiveDb.isLight
-                                          ? AppColors.ff000000.withOpacity(.2)
-                                          : AppColors.ffffffff,
-                                      borderRadius:
-                                          BorderRadius.circular(15.sp),
-                                      boxShadow: [
-                                        hiveDb.isLight
-                                            ? BoxShadow(
-                                                blurRadius: 4.sp,
-                                                offset: Offset(2.sp, 2.sp),
-                                                color: AppColors.ffffffff,
-                                                blurStyle: BlurStyle.outer)
-                                            : BoxShadow(
-                                                blurRadius: 4.sp,
-                                                offset: Offset(2.sp, 2.sp),
-                                                color: AppColors.ff000000
-                                                    .withOpacity(.3),
-                                              ),
-                                      ],
-                                    ),
-                                    margin: EdgeInsets.only(right: 20.sp),
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          flex: 2,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(15.sp),
-                                                topRight:
-                                                    Radius.circular(15.sp)),
-                                            child: Image(
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                post.gridImages[0],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 15.sp,
-                                                right: 15.sp,
-                                                bottom: 5.sp),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    post.title,
-                                                    style: TextStyle(
-                                                      fontFamily: I18N.inter,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 18.sp,
-                                                      color: hiveDb.isLight
-                                                          ? AppColors.ffffffff
-                                                              .withOpacity(.9)
-                                                          : AppColors.ff122D4D,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                    post.content,
-                                                    style: TextStyle(
-                                                      fontFamily: I18N.inter,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 14.sp,
-                                                      color: hiveDb.isLight
-                                                          ? AppColors.ffffffff
-                                                              .withOpacity(.7)
-                                                          : AppColors.ff415770,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        '\$${post.price}',
-                                                        style: TextStyle(
-                                                          fontSize: 12.sp,
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          color: AppColors
-                                                              .ff016FFF,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                        if (state.items.isNotEmpty)
+                          CarouselSlider.builder(
+                            itemCount: state.items.length,
+                            itemBuilder: (context, index, realIndex) {
+                              final post = state.items[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => InfoPage(
+                                                post: post,
+                                              )));
                                 },
-                                options: CarouselOptions(
-                                  enlargeStrategy:
-                                      CenterPageEnlargeStrategy.zoom,
-                                  clipBehavior: Clip.none,
-                                  aspectRatio: 6.sp / 3.5.sp,
-                                  viewportFraction: 0.8,
-                                  initialPage: 0,
-                                  enableInfiniteScroll: true,
-                                  reverse: false,
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 3),
-                                  autoPlayAnimationDuration:
-                                      const Duration(milliseconds: 800),
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  enlargeCenterPage: true,
-                                  enlargeFactor: 0.5,
-                                  scrollDirection: Axis.horizontal,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: hiveDb.isLight
+                                        ? AppColors.ff000000.withOpacity(.2)
+                                        : AppColors.ffffffff,
+                                    borderRadius: BorderRadius.circular(15.sp),
+                                    boxShadow: [
+                                      hiveDb.isLight
+                                          ? BoxShadow(
+                                              blurRadius: 4.sp,
+                                              offset: Offset(2.sp, 2.sp),
+                                              color: AppColors.ffffffff,
+                                              blurStyle: BlurStyle.outer)
+                                          : BoxShadow(
+                                              blurRadius: 4.sp,
+                                              offset: Offset(2.sp, 2.sp),
+                                              color: AppColors.ff000000
+                                                  .withOpacity(.3),
+                                            ),
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.only(right: 20.sp),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(15.sp),
+                                              topRight: Radius.circular(15.sp)),
+                                          child: Image(
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                              post.gridImages[0],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 15.sp,
+                                              right: 15.sp,
+                                              bottom: 5.sp),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  post.title,
+                                                  style: TextStyle(
+                                                    fontFamily: I18N.inter,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.sp,
+                                                    color: hiveDb.isLight
+                                                        ? AppColors.ffffffff
+                                                            .withOpacity(.9)
+                                                        : AppColors.ff122D4D,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  post.content,
+                                                  style: TextStyle(
+                                                    fontFamily: I18N.inter,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.sp,
+                                                    color: hiveDb.isLight
+                                                        ? AppColors.ffffffff
+                                                            .withOpacity(.7)
+                                                        : AppColors.ff415770,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      '\$${post.price}',
+                                                      style: TextStyle(
+                                                        fontSize: 12.sp,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color:
+                                                            AppColors.ff016FFF,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            : SizedBox.shrink(),
+                              );
+                            },
+                            options: CarouselOptions(
+                              enlargeStrategy: CenterPageEnlargeStrategy.zoom,
+                              clipBehavior: Clip.none,
+                              aspectRatio: 6.sp / 3.5.sp,
+                              viewportFraction: 0.8,
+                              initialPage: 0,
+                              enableInfiniteScroll: true,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 3),
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: true,
+                              enlargeFactor: 0.5,
+                              scrollDirection: Axis.horizontal,
+                            ),
+                          )
+                        else
+                          const SizedBox.shrink(),
                         if (state is MainLoading)
                           const Center(
                             child: CircularProgressIndicator.adaptive(),
@@ -514,11 +501,6 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         InfoPage(post: post)));
-                              },
-                              onLongPress: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        DetailPage(post: post)));
                               },
                               child: Stack(
                                 alignment: Alignment(0.9.sp, -1.sp),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
+import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/pofile/my_announcements.dart';
 import 'package:home_market/views/profile/user_name_email.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,10 +14,7 @@ import '../../services/constants/app_colors.dart';
 import '../../services/constants/app_str.dart';
 import '../../views/profile/profile_button.dart';
 
-import '../detail_page.dart';
-
 import 'settings_page.dart';
-import '../sign_in_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final PageController controller;
@@ -355,27 +353,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               );
                             },
                           ),
-                          Container(
-                            width: double.infinity,
-                            height: 1,
-                            color: Colors.grey.shade300,
-                          ),
-                          //^ Post an ad Button
-                          ProfileButtom(
-                            text: "Create Announcement".tr(),
-                            icon: Icon(
-                              Icons.add_to_photos_outlined,
-                              size: 29.sp,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DetailPage(),
-                                ),
-                              );
-                            },
-                          ),
+
                           Container(
                             width: double.infinity,
                             height: 1,

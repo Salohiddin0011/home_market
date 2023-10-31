@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/models/post_model.dart';
-import 'package:home_market/pages/map/google_map.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
@@ -50,7 +49,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
           ),
         ),
         SizedBox(
-          height: 10.sp,
+          height: 25.sp,
         ),
         Padding(
           padding: EdgeInsets.only(left: 20.sp),
@@ -64,7 +63,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
                     hiveDb.isLight ? AppColors.ffffffff : AppColors.ff2A2B3F),
           ),
         ),
-        SizedBox(height: 9.sp),
+        SizedBox(height: 15.sp),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: Row(
@@ -146,17 +145,17 @@ class _DescriptionPageState extends State<DescriptionPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 20, top: 15),
+          padding: EdgeInsets.only(left: 20.sp, top: 25.sp),
           child: Text(
             "Facilities".tr(),
             style: TextStyle(
-                fontSize: 13.sp,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 fontFamily: I18N.poppins),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 12, left: 12, top: 10),
+          padding: EdgeInsets.only(right: 12.sp, left: 12.sp, top: 10.sp),
           child: Wrap(
             children: [
               for (int i = 0; i < widget.post!.facilities.length; i++)

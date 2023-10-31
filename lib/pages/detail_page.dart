@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:home_market/models/post_model.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_str.dart';
 import 'package:home_market/services/constants/data.dart';
+import 'package:home_market/services/firebase/store_service.dart';
 import 'package:home_market/views/detail_txt.dart';
 import 'package:home_market/views/facilities_view.dart';
 import 'package:home_market/views/information_view.dart';
@@ -89,6 +89,10 @@ class _DetailPageState extends State<DetailPage> {
     if (files.isNotEmpty && mounted) {
       context.read<PostBloc>().add(ViewGridImagesPostEvent(files));
     }
+
+    if (images != null) {
+      StoreService.removeFiles(images!);
+    }
     images = null;
   }
 
@@ -97,7 +101,8 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Create Announcement".tr(),
+          (widget.post == null ? 'Create Announcement' : 'Update Announcement')
+              .tr(),
           style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 18.sp,
@@ -523,15 +528,30 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                         ),
                       ),
-                      if (state is PostLoading)
-                        const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        )
+                      if (state is PostLoading) const PostLoadingPage()
                     ],
                   );
                 }),
               );
             }),
+      ),
+    );
+  }
+}
+
+class PostLoadingPage extends StatelessWidget {
+  const PostLoadingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.sizeOf(context).height,
+      width: MediaQuery.sizeOf(context).width,
+      color: hiveDb.isLight
+          ? AppColors.ff000000.withOpacity(.1)
+          : AppColors.ffffffff.withOpacity(.1),
+      child: const Center(
+        child: CircularProgressIndicator.adaptive(),
       ),
     );
   }

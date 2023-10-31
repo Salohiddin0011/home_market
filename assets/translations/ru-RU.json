@@ -57,5 +57,7 @@
  "Confirm":"Подтвердить",
  "Please confirm password to delete account.": "Пожалуйста подтвердите свой пароль чтобы удалить акаунт",
  "Password":"Пароль",
- "Delete": "Удалить"
+ "Delete": "Удалить",
+ "Update Announcement": "Изменить объявление"
+
 }

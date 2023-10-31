@@ -7,7 +7,6 @@ import 'package:home_market/models/facilities_model.dart';
 import 'package:home_market/models/message_model.dart';
 import 'package:home_market/models/post_model.dart';
 import 'package:home_market/models/user_model.dart';
-import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/services/firebase/auth_service.dart';
 import 'package:home_market/services/firebase/store_service.dart';
 

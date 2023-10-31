@@ -7,7 +7,6 @@ import 'package:home_market/pages/detail_page.dart';
 import 'package:home_market/pages/home_page.dart';
 import 'package:home_market/pages/my_like_page.dart';
 import 'package:home_market/pages/pofile/profile.dart';
-import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/data.dart';
 import 'package:home_market/views/bottom_appbar_item.dart';
 
@@ -26,6 +25,22 @@ class _MainPageState extends State<MainPage> {
         valueListenable: hiveDb.getListenable,
         builder: (context, mode, child) {
           return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DetailPage(),
+                    ));
+              },
+              shape: const CircleBorder(),
+              child: Icon(
+                Icons.add,
+                size: 30.sp,
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniCenterDocked,
             bottomNavigationBar:
                 BlocConsumer<LandingPageBloc, LandingPageState>(
               listener: (context, state) {},

@@ -57,5 +57,6 @@
  "Confirm":"Tasdiqlash",
  "Please confirm password to delete account.": "Iltimos Akauntni o'chirish uchun parolongizni tasdiqlang",
  "Password":"Parol",
- "Delete": "O'chirish"
+ "Delete": "O'chirish",
+ "Update Announcement": "Elonni o'zgartirish"
 }

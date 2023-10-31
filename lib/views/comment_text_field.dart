@@ -30,11 +30,11 @@ class _CommentTextFieldState extends State<CommentTextField> {
                 ? BoxDecoration(boxShadow: [
                     BoxShadow(
                       blurRadius: 7,
-                      offset: Offset(-1, -1),
+                      offset: const Offset(-1, -1),
                       color: Colors.grey.withOpacity(.2),
                       blurStyle: BlurStyle.outer,
                     ),
-                  ], borderRadius: BorderRadius.all(Radius.circular(50)))
+                  ], borderRadius: const BorderRadius.all(Radius.circular(50)))
                 : null,
             height: 60,
             child: Card(
