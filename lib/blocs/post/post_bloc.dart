@@ -39,16 +39,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   void _createPost(CreatePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.storePost(
-        gridImages: event.gridImages,
-        title: event.title,
-        content: event.content,
-        facilities: event.facilities,
-        area: event.area,
-        bathrooms: event.bathrooms,
-        isApartment: event.isApartment,
-        phone: event.phone,
-        price: event.price,
-        rooms: event.rooms);
+      gridImages: event.gridImages,
+      title: event.title,
+      content: event.content,
+      facilities: event.facilities,
+      area: event.area,
+      bathrooms: event.bathrooms,
+      isApartment: event.isApartment,
+      phone: event.phone,
+      price: event.price,
+      rooms: event.rooms,
+      lat: event.lat,
+      long: event.long,
+    );
     if (result) {
       emit(CreatePostSuccess());
     } else {
@@ -87,6 +90,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       phone: event.phone,
       price: event.price,
       rooms: event.rooms,
+      lat: event.lat,
+      long: event.long,
     );
     if (result) {
       emit(UpdatePostSuccess());
@@ -98,6 +103,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   void _updateLikePost(UpdateLikePostEvent event, Emitter emit) async {
     emit(PostLoading());
     final result = await DBService.updateLikePost(
+      userId: event.userId,
+      email: event.email,
+      userName: event.userName,
       gridImages: event.gridImages,
       postId: event.postId,
       title: event.title,
@@ -110,6 +118,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       phone: event.phone,
       price: event.price,
       rooms: event.rooms,
+      lat: event.lat,
+      long: event.long,
     );
     if (result) {
       emit(UpdateLikePostSuccess());

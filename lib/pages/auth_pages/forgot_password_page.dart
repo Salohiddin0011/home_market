@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/main.dart';
 import 'package:home_market/services/constants/app_colors.dart';
-import 'package:home_market/services/firebase/util_service.dart';
 import 'package:home_market/views/custom_txt_field.dart';
 
 import '../../services/constants/app_str.dart';
@@ -56,24 +57,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 15.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Spacer(flex: 1),
-            const Center(
+            Center(
               child: Text(
                 "Receive an email to your password.",
                 style: TextStyle(
-                  color: Colors.black,
+                  color:
+                      hiveDb.isLight ? AppColors.ffffffff : AppColors.ff000000,
                   fontFamily: I18N.poppins,
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: 15.sp),
             Center(
                 child: CustomTextField(
               controller: _controller,
@@ -82,21 +84,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             const Spacer(flex: 2),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.ff016FFF,
-                minimumSize: Size(MediaQuery.sizeOf(context).width, 54),
+                backgroundColor: hiveDb.isLight
+                    ? AppColors.ff000000.withOpacity(.7)
+                    : AppColors.ff016FFF,
+                minimumSize: Size(MediaQuery.sizeOf(context).width, 54.sp),
               ),
               onPressed: () {
                 resetPassword(context);
               },
-              child: const Text(
+              child: Text(
                 "Reset password",
                 style: TextStyle(
                   color: AppColors.ffffffff,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: 35.sp),
           ],
         ),
       ),

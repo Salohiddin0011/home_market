@@ -34,7 +34,7 @@ class _MyLikePageState extends State<MyLikePage> {
             appBar: AppBar(
               centerTitle: false,
               title: Text(
-                'Favorite Houses',
+                'Favorite Houses'.tr(),
                 style: TextStyle(
                     fontFamily: I18N.poppins,
                     fontSize: 24,

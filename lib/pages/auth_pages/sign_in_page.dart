@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
+import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/main_page.dart';
 import 'package:home_market/pages/auth_pages/sign_up_page.dart';
@@ -11,6 +12,7 @@ import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
 import 'package:home_market/views/custom_txt_field.dart';
+import 'package:home_market/views/loading/loading.dart';
 
 import 'forgot_password_page.dart';
 
@@ -23,7 +25,7 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context)
@@ -44,7 +46,7 @@ class SignInPage extends StatelessWidget {
             }
           }
         },
-        child: SingleChildScrollView(
+        builder: (context, state) => SingleChildScrollView(
           child: SizedBox(
             height: MediaQuery.sizeOf(context).height,
             width: MediaQuery.sizeOf(context).width,
@@ -179,22 +181,7 @@ class SignInPage extends StatelessWidget {
                 ),
 
                 /// #laoding...
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    if (state is AuthLoading) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.25),
-                        ),
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
+                if (state is AuthLoading) const PostLoadingPage()
               ],
             ),
           ),

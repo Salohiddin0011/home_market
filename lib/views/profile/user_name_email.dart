@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/services/firebase/auth_service.dart';
 
 import '../../services/constants/app_colors.dart';
 import '../../services/constants/app_str.dart';
@@ -18,13 +19,21 @@ class UserNameEmail extends StatelessWidget {
       child: Column(
         children: [
           CircleAvatar(
-            radius: 62.sp,
-            backgroundColor: AppColors.ff016FFF,
-            child: Icon(
-              Icons.person,
-              size: 70.sp,
-            ),
-          ),
+              radius: 62.sp,
+              backgroundColor: AppColors.ff016FFF,
+              child: AuthService.user.photoURL == null
+                  ? Icon(
+                      Icons.person,
+                      size: 70.sp,
+                      color: AppColors.ffffffff,
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(AuthService.user.photoURL!))),
+                    )),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

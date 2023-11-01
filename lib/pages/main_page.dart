@@ -5,6 +5,7 @@ import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/detail_page.dart';
 import 'package:home_market/pages/home_page.dart';
+import 'package:home_market/pages/map/all_home_map.dart';
 import 'package:home_market/pages/my_like_page.dart';
 import 'package:home_market/pages/pofile/profile.dart';
 import 'package:home_market/services/constants/data.dart';
@@ -19,6 +20,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   PageController controller = PageController();
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -72,7 +79,7 @@ class _MainPageState extends State<MainPage> {
               controller: controller,
               children: [
                 const HomePage(),
-                const HomePage(),
+                const AllHomeMap(),
                 const MyLikePage(),
                 ProfilePage(controller: controller),
               ],

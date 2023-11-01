@@ -7,9 +7,11 @@ import 'package:home_market/services/firebase/db_service.dart';
 sealed class StoreService {
   static final storage = FirebaseStorage.instance;
 
-  static Future<String> uploadFile(File file) async {
-    final image = storage.ref(Folder.postImages).child(
-        "image_${DateTime.now().toIso8601String()}${file.path.substring(file.path.lastIndexOf("."))}");
+  static Future<String> uploadFile(File file, [bool? isProfile]) async {
+    final image = storage
+        .ref(isProfile != null ? "fortest" : Folder.postImages)
+        .child(
+            "image_${DateTime.now().toIso8601String()}${file.path.substring(file.path.lastIndexOf("."))}");
     final task = image.putFile(file);
     await task.whenComplete(() {});
     return image.getDownloadURL();
@@ -22,5 +24,12 @@ sealed class StoreService {
       final storeReference = storage.ref().child(fileUrl);
       await storeReference.delete();
     }
+  }
+
+  static Future<void> removeFile(String imagePath) async {
+    var fileUrl = Uri.decodeFull(path.basename(imagePath))
+        .replaceAll(RegExp(r'(\?alt).*'), '');
+    final storeReference = storage.ref().child(fileUrl);
+    await storeReference.delete();
   }
 }

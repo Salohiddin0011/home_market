@@ -3,7 +3,7 @@ import 'package:home_market/services/constants/app_icons.dart';
 bool fromIsLiked = false;
 List<String> icons = [
   AppIcons.home,
-  AppIcons.home,
+  AppIcons.location,
   AppIcons.favoriteOut,
   AppIcons.account
 ];

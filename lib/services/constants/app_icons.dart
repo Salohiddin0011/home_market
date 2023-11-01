@@ -21,4 +21,5 @@ sealed class AppIcons {
   static const String circleLike = 'assets/icons/ic_circle_share.png';
   static const String phone = 'assets/icons/ic_phone.png';
   static const String email = 'assets/icons/ic_email.png';
+  static const String location = 'assets/icons/ic_location.png';
 }

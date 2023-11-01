@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/pofile/my_announcements.dart';
+import 'package:home_market/services/firebase/auth_service.dart';
+import 'package:home_market/services/firebase/store_service.dart';
 import 'package:home_market/views/profile/user_name_email.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -24,7 +29,27 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+File? file;
+final ImagePicker picker = ImagePicker();
+
 class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void getImage() async {
+    final xFile = await picker.pickImage(source: ImageSource.gallery);
+    file = xFile != null ? File(xFile.path) : null;
+    if (file != null) {
+      if (AuthService.user.photoURL != null) {
+        StoreService.removeFile(AuthService.user.photoURL!);
+      }
+      AuthService.user
+          .updatePhotoURL(await StoreService.uploadFile(file!, true));
+    }
+  }
+
   //^ to delete showDialog
   void showWarningDialog(BuildContext ctx) {
     final controller = TextEditingController();
@@ -50,12 +75,17 @@ class _ProfilePageState extends State<ProfilePage> {
             return Stack(
               children: [
                 AlertDialog(
-                  backgroundColor: const Color(0xffF9FBFF),
+                  shadowColor: AppColors.ff016FFF.withOpacity(.2),
+                  backgroundColor: hiveDb.isLight
+                      ? AppColors.ff000000
+                      : const Color(0xffF9FBFF),
                   title: Text(
                     I18N.deleteAccount.tr(),
                     style: TextStyle(
                         fontSize: 18.sp,
-                        color: AppColors.ff122D4D,
+                        color: hiveDb.isLight
+                            ? AppColors.ffffffff
+                            : AppColors.ff122D4D,
                         fontFamily: I18N.poppins,
                         fontWeight: FontWeight.w600),
                   ),
@@ -85,47 +115,76 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   actionsAlignment: MainAxisAlignment.spaceBetween,
                   actions: [
-                    /// #cancel
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.ff016FFF,
-                        minimumSize: Size(90.sp, 45.sp),
+                    /// #confirm #delete
+                    Container(
+                      decoration: BoxDecoration(
+                          color: hiveDb.isLight
+                              ? AppColors.ff000000.withOpacity(.8)
+                              : AppColors.ff016FFF.withOpacity(.9),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.sp)),
+                          boxShadow: [
+                            hiveDb.isLight
+                                ? BoxShadow(
+                                    blurRadius: 2,
+                                    offset: const Offset(1, 1),
+                                    color: AppColors.ffffffff.withOpacity(.6))
+                                : BoxShadow(
+                                    blurRadius: 2,
+                                    offset: const Offset(1, 1),
+                                    color: AppColors.ff000000.withOpacity(.3))
+                          ]),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(I18N.cancel.tr(),
+                            style: const TextStyle(color: AppColors.ffffffff)),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(I18N.cancel.tr(),
-                          style: TextStyle(color: AppColors.ffffffff)),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: hiveDb.isLight
+                              ? AppColors.ff000000.withOpacity(.8)
+                              : AppColors.ff016FFF.withOpacity(.9),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(25.sp)),
+                          boxShadow: [
+                            hiveDb.isLight
+                                ? BoxShadow(
+                                    blurRadius: 2,
+                                    offset: const Offset(1, 1),
+                                    color: AppColors.ffffffff.withOpacity(.6))
+                                : BoxShadow(
+                                    blurRadius: 2,
+                                    offset: const Offset(1, 1),
+                                    color: AppColors.ff000000.withOpacity(.3))
+                          ]),
+                      child: TextButton(
+                        onPressed: () {
+                          if (state is DeleteConfirmSuccess) {
+                            context.read<AuthBloc>().add(
+                                DeleteAccountEvent(controller.text.trim()));
+                          } else {
+                            context
+                                .read<AuthBloc>()
+                                .add(const DeleteConfirmEvent());
+                          }
+                        },
+                        child: Text(
+                            state is DeleteConfirmSuccess
+                                ? I18N.delete.tr()
+                                : I18N.confirm.tr(),
+                            style: const TextStyle(color: AppColors.ffffffff)),
+                      ),
                     ),
 
-                    /// #confirm #delete
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.ff016FFF,
-                        minimumSize: Size(90.sp, 45.sp),
-                      ),
-                      onPressed: () {
-                        if (state is DeleteConfirmSuccess) {
-                          context
-                              .read<AuthBloc>()
-                              .add(DeleteAccountEvent(controller.text.trim()));
-                        } else {
-                          context
-                              .read<AuthBloc>()
-                              .add(const DeleteConfirmEvent());
-                        }
-                      },
-                      child: Text(
-                          state is DeleteConfirmSuccess
-                              ? I18N.delete.tr()
-                              : I18N.confirm.tr(),
-                          style: TextStyle(color: AppColors.ffffffff)),
-                    ),
+                    /// #cancel
                   ],
                 ),
                 if (state is AuthLoading)
                   const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator.adaptive(),
                   )
               ],
             );
@@ -154,85 +213,73 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        const String url = 'https://t.me/IlhomDev1';
+              Padding(
+                padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          const String url = 'https://t.me/IlhomDev1';
 
-                        if (await canLaunchUrlString(url)) {
-                          await launchUrlString(url);
-                        }
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.ffffffff,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.sp))),
+                          if (await canLaunchUrlString(url)) {
+                            await launchUrlString(url);
+                          }
+                        },
                         child: Icon(
                           Icons.telegram,
                           size: 45.sp,
-                          color: AppColors.ff016FFF,
+                          color: hiveDb.isLight
+                              ? AppColors.ffffffff
+                              : AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 2.sp),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        Uri url = Uri(scheme: 'tel', path: '+998901234567');
+                    SizedBox(width: 2.sp),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          Uri url = Uri(scheme: 'tel', path: '+998901234567');
 
-                        if (await canLaunchUrl(url)) {
-                          await launchUrl(url);
-                        }
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.ffffffff,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.sp))),
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          }
+                        },
                         child: Icon(
                           Icons.phone,
                           size: 45.sp,
-                          color: AppColors.ff016FFF,
+                          color: hiveDb.isLight
+                              ? AppColors.ffffffff
+                              : AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 2.sp),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        const String email = 'homemarketapp@gmail.com';
-                        const String subject = "Home market messeng";
-                        const String messeng = "Hello there\n\n";
-                        const String url =
-                            'mailto:$email?subject=${subject}&body=${messeng}';
+                    SizedBox(width: 2.sp),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          const String email = 'homemarketapp@gmail.com';
+                          const String subject = "Home market messeng";
+                          const String messeng = "Hello there\n\n";
+                          const String url =
+                              'mailto:$email?subject=${subject}&body=${messeng}';
 
-                        if (await canLaunchUrlString(url)) {
-                          await launchUrlString(url);
-                        }
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.ffffffff,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.sp))),
+                          if (await canLaunchUrlString(url)) {
+                            await launchUrlString(url);
+                          }
+                        },
                         child: Icon(
                           Icons.email_outlined,
                           size: 45.sp,
-                          color: AppColors.ff016FFF,
+                          color: hiveDb.isLight
+                              ? AppColors.ffffffff
+                              : AppColors.ff016FFF,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           );
@@ -250,7 +297,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 "Are you sure you want to sign out?".tr(),
                 style: TextStyle(
                     fontSize: 15.sp,
-                    color: AppColors.ff122D4D,
+                    color: hiveDb.isLight
+                        ? AppColors.ffffffff
+                        : AppColors.ff122D4D,
                     fontFamily: I18N.poppins,
                     fontWeight: FontWeight.w600),
               ),
@@ -259,28 +308,57 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: .0,
-                        backgroundColor: AppColors.ff016FFF,
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                      child: Text("No".tr(),
-                          style: TextStyle(color: AppColors.ffffffff))),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: .0,
-                        backgroundColor: AppColors.ff016FFF,
-                      ),
-                      onPressed: () async {
-                        ctx.read<AuthBloc>().add(const SignOutEvent());
-                      },
-                      child: Text(
-                        "Yes".tr(),
-                        style: TextStyle(color: AppColors.ffffffff),
-                      )),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: hiveDb.isLight
+                            ? AppColors.ff000000.withOpacity(.8)
+                            : AppColors.ff016FFF.withOpacity(.9),
+                        borderRadius: BorderRadius.all(Radius.circular(25.sp)),
+                        boxShadow: [
+                          hiveDb.isLight
+                              ? BoxShadow(
+                                  blurRadius: 2,
+                                  offset: const Offset(1, 1),
+                                  color: AppColors.ffffffff.withOpacity(.6))
+                              : BoxShadow(
+                                  blurRadius: 2,
+                                  offset: const Offset(1, 1),
+                                  color: AppColors.ff000000.withOpacity(.3))
+                        ]),
+                    child: TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        child: Text("No".tr(),
+                            style: const TextStyle(color: AppColors.ffffffff))),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15.sp, bottom: 15.sp),
+                    decoration: BoxDecoration(
+                        color: hiveDb.isLight
+                            ? AppColors.ff000000.withOpacity(.8)
+                            : AppColors.ff016FFF.withOpacity(.9),
+                        borderRadius: BorderRadius.all(Radius.circular(25.sp)),
+                        boxShadow: [
+                          hiveDb.isLight
+                              ? BoxShadow(
+                                  blurRadius: 2,
+                                  offset: const Offset(1, 1),
+                                  color: AppColors.ffffffff.withOpacity(.6))
+                              : BoxShadow(
+                                  blurRadius: 2,
+                                  offset: const Offset(1, 1),
+                                  color: AppColors.ff000000.withOpacity(.3))
+                        ]),
+                    child: TextButton(
+                        onPressed: () async {
+                          ctx.read<AuthBloc>().add(const SignOutEvent());
+                        },
+                        child: Text(
+                          "Yes".tr(),
+                          style: const TextStyle(color: AppColors.ffffffff),
+                        )),
+                  ),
                 ],
               ),
             ],
@@ -315,7 +393,7 @@ class _ProfilePageState extends State<ProfilePage> {
             )
           ],
           child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: SizedBox(
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height - 100.sp,
@@ -323,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   const Spacer(flex: 4),
                   //^ user_name_email file
-                  UserNameEmail(),
+                  GestureDetector(onTap: getImage, child: UserNameEmail()),
                   const Spacer(flex: 2),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),

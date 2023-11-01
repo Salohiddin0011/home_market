@@ -10,6 +10,7 @@ import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
 import 'package:home_market/views/custom_txt_field.dart';
+import 'package:home_market/views/loading/loading.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
@@ -61,7 +62,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context)
@@ -73,7 +74,7 @@ class SignUpPage extends StatelessWidget {
             showMesseginDialog(context);
           }
         },
-        child: Stack(
+        builder: (context, state) => Stack(
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.sp),
@@ -195,22 +196,7 @@ class SignUpPage extends StatelessWidget {
             ),
 
             /// #laoding...
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.25),
-                    ),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
+            if (state is AuthLoading) const PostLoadingPage()
           ],
         ),
       ),

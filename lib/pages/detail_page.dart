@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -16,7 +17,10 @@ import 'package:home_market/services/firebase/store_service.dart';
 import 'package:home_market/views/detail_txt.dart';
 import 'package:home_market/views/facilities_view.dart';
 import 'package:home_market/views/information_view.dart';
+import 'package:home_market/views/loading/loading.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'map/add_map.dart';
 
 class DetailPage extends StatefulWidget {
   final Post? post;
@@ -38,7 +42,7 @@ class _DetailPageState extends State<DetailPage> {
   late final TextEditingController bathRoomsController;
   late bool isApartment;
   final ImagePicker picker = ImagePicker();
-  File? file;
+
   List<File?> files = [];
   List<String>? images;
   @override
@@ -63,6 +67,8 @@ class _DetailPageState extends State<DetailPage> {
       roomsController = TextEditingController(text: widget.post!.rooms);
       bathRoomsController = TextEditingController(text: widget.post!.bathrooms);
     } else {
+      LatLong.lat = null;
+      LatLong.long = null;
       facilities = [];
       isApartment = false;
       priceController = TextEditingController();
@@ -74,14 +80,6 @@ class _DetailPageState extends State<DetailPage> {
       phoneCtrl = TextEditingController();
     }
   }
-
-  // void getImage() async {
-  //   final xFile = await picker.pickImage(source: ImageSource.gallery);
-  //   file = xFile != null ? File(xFile.path) : null;
-  //   if (file != null && mounted) {
-  //     context.read<PostBloc>().add(ViewImagePostEvent(file!));
-  //   }
-  // }
 
   void getMultiImage() async {
     final xFile = await picker.pickMultiImage(maxHeight: 1000, maxWidth: 1000);
@@ -292,13 +290,19 @@ class _DetailPageState extends State<DetailPage> {
                                 maxLines: 2,
                               ),
                               SizedBox(height: 10.sp),
-                              Text(
-                                'Describe your House or Apartment'.tr(),
-                                style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: I18N.poppins,
-                                    color: AppColors.ff016FFF),
+                              GestureDetector(
+                                onTap: () {
+                                  log(LatLong.lat.toString());
+                                  log(LatLong.long.toString());
+                                },
+                                child: Text(
+                                  'Describe your House or Apartment'.tr(),
+                                  style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: I18N.poppins,
+                                      color: AppColors.ff016FFF),
+                                ),
                               ),
                               SizedBox(height: 10.sp),
                               CustomDetailTextField(
@@ -372,7 +376,44 @@ class _DetailPageState extends State<DetailPage> {
                                     }),
                                 ],
                               ),
-                              SizedBox(height: 30.sp),
+                              SizedBox(height: 10.sp),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 20.sp, bottom: 20.sp),
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AddMap(),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        color: AppColors.ff016FFF,
+                                        size: 25.sp,
+                                      ),
+                                      Text(
+                                        "Choose location of your house".tr(),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: AppColors.ff016FFF,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: I18N.inter),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Text(
                                 'Phone Number'.tr(),
                                 style: TextStyle(
@@ -417,6 +458,14 @@ class _DetailPageState extends State<DetailPage> {
                                             )));
                                     return;
                                   }
+                                  if (LatLong.lat == null &&
+                                      LatLong.long == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                "Xaritada manzil belgilanmagan!")));
+                                    return;
+                                  }
                                   String square = '';
                                   String price = '';
                                   int priceNum = 0;
@@ -459,22 +508,26 @@ class _DetailPageState extends State<DetailPage> {
                                   }
 
                                   if (widget.post == null) {
-                                    context.read<PostBloc>().add(
-                                        CreatePostEvent(
-                                            gridImages: files,
-                                            title: titleController.text,
-                                            content: contentController.text,
-                                            facilities: facilities,
-                                            area: square,
-                                            bathrooms: bathRoomsController.text,
-                                            isApartment: isApartment,
-                                            phone: phoneCtrl.text,
-                                            price: price,
-                                            rooms: roomsController.text));
+                                    context
+                                        .read<PostBloc>()
+                                        .add(CreatePostEvent(
+                                          gridImages: files,
+                                          title: titleController.text,
+                                          content: contentController.text,
+                                          facilities: facilities,
+                                          area: square,
+                                          bathrooms: bathRoomsController.text,
+                                          isApartment: isApartment,
+                                          phone: phoneCtrl.text,
+                                          price: price,
+                                          rooms: roomsController.text,
+                                          lat: LatLong.lat.toString(),
+                                          long: LatLong.long.toString(),
+                                        ));
                                   } else {
-                                    print("IMAGES = $images");
+                                    log("IMAGES = $images");
                                     context.read<PostBloc>().add(
-                                        UpdatePostEvent(
+                                          UpdatePostEvent(
                                             isLiked: widget.post!.isLiked,
                                             imagesUri: images,
                                             gridImages: files,
@@ -487,7 +540,11 @@ class _DetailPageState extends State<DetailPage> {
                                             isApartment: isApartment,
                                             phone: phoneCtrl.text,
                                             price: price,
-                                            rooms: roomsController.text));
+                                            rooms: roomsController.text,
+                                            lat: widget.post!.lat,
+                                            long: widget.post!.long,
+                                          ),
+                                        );
                                   }
                                 },
                                 child: Container(
@@ -534,24 +591,6 @@ class _DetailPageState extends State<DetailPage> {
                 }),
               );
             }),
-      ),
-    );
-  }
-}
-
-class PostLoadingPage extends StatelessWidget {
-  const PostLoadingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.sizeOf(context).height,
-      width: MediaQuery.sizeOf(context).width,
-      color: hiveDb.isLight
-          ? AppColors.ff000000.withOpacity(.1)
-          : AppColors.ffffffff.withOpacity(.1),
-      child: const Center(
-        child: CircularProgressIndicator.adaptive(),
       ),
     );
   }

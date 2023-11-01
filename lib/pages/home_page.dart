@@ -9,6 +9,7 @@ import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/post_info_page.dart';
+import 'package:home_market/pages/search_page.dart';
 import 'package:home_market/services/constants/app_colors.dart';
 import 'package:home_market/services/constants/app_icons.dart';
 import 'package:home_market/services/constants/app_str.dart';
@@ -112,6 +113,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  bool enabled = true;
   bool like = false;
   @override
   Widget build(BuildContext context) {
@@ -152,31 +154,29 @@ class _HomePageState extends State<HomePage> {
               )),
               actions: [
                 if (AuthService.user.photoURL == null)
-                  InkWell(
-                    onTap: () {
-                      context.read<AuthBloc>().add(const SignOutEvent());
-                    },
-                    child: CircleAvatar(
-                      radius: 30.sp,
-                      child: Text(
-                        AuthService.user.displayName!
-                            .substring(0, 1)
-                            .toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 30.sp,
-                          fontFamily: I18N.poppins,
-                        ),
+                  CircleAvatar(
+                    radius: 30.sp,
+                    child: Text(
+                      AuthService.user.displayName!
+                          .substring(0, 1)
+                          .toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 30.sp,
+                        fontFamily: I18N.poppins,
                       ),
                     ),
                   )
                 else
                   CircleAvatar(
-                    radius: 30.sp,
-                    child: Image.network(
-                      AuthService.user.photoURL!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      radius: 30.sp,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image:
+                                    NetworkImage(AuthService.user.photoURL!))),
+                      )),
                 SizedBox(width: 25.sp),
               ],
               bottom: PreferredSize(
@@ -201,61 +201,67 @@ class _HomePageState extends State<HomePage> {
                                 blurStyle: BlurStyle.outer),
                       ],
                     ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        fillColor: hiveDb.isLight
-                            ? AppColors.ff000000.withOpacity(.2)
-                            : AppColors.ffffffff,
-                        filled: true,
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(
-                              top: 8.0.sp,
-                              bottom: 8.0.sp,
-                              left: 15.sp,
-                              right: 15.sp),
-                          child: Image.asset(
-                            AppIcons.search,
-                            height: 20.sp,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchPage(
+                                    str: "Search Announcements".tr())));
+                      },
+                      child: SizedBox(
+                        height: 55.sp,
+                        width: double.infinity,
+                        child: TextField(
+                          autofocus: false,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            fillColor: hiveDb.isLight
+                                ? AppColors.ff000000.withOpacity(.2)
+                                : AppColors.ffffffff,
+                            filled: true,
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 8.0.sp,
+                                  bottom: 8.0.sp,
+                                  left: 15.sp,
+                                  right: 15.sp),
+                              child: Image.asset(
+                                AppIcons.search,
+                                height: 20.sp,
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: hiveDb.isLight
+                                    ? AppColors.ffffffff
+                                    : AppColors.ff000000),
+                            hintText: "Search".tr(),
+                            border: InputBorder.none,
+                            errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.sp))),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.sp))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.sp))),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.sp))),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.sp))),
                           ),
                         ),
-                        hintStyle: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: hiveDb.isLight
-                                ? AppColors.ffffffff
-                                : AppColors.ff000000),
-                        hintText: "Search".tr(),
-                        border: InputBorder.none,
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.sp))),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.sp))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.sp))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.sp))),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.sp))),
                       ),
-                      onChanged: (text) {
-                        final bloc = context.read<MainBloc>();
-                        debugPrint(text);
-                        if (text.isEmpty) {
-                          bloc.add(const GetAllDataEvent());
-                        } else {
-                          bloc.add(SearchMainEvent(text));
-                        }
-                      },
                     ),
                   ),
                 ),

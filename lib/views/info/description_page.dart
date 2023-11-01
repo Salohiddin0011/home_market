@@ -10,6 +10,8 @@ import 'package:home_market/views/info/desc_component.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../pages/map/google_map.dart';
+
 // ignore: must_be_immutable
 class DescriptionPage extends StatefulWidget {
   Post? post;
@@ -68,18 +70,13 @@ class _DescriptionPageState extends State<DescriptionPage> {
           padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: Row(
             children: [
-              InkWell(
-                onTap: () {
-                  hiveDb.changeMode();
-                },
-                child: CircleAvatar(
-                  radius: 25.sp,
-                  child: Text(
-                    widget.post!.userName.substring(0, 1),
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+              CircleAvatar(
+                radius: 25.sp,
+                child: Text(
+                  widget.post!.userName.substring(0, 1),
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -207,6 +204,31 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   ),
                 ),
             ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 20.sp, top: 25.sp),
+          child: Text(
+            "Location of the building".tr(),
+            style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                fontFamily: I18N.poppins),
+          ),
+        ),
+        SizedBox(height: 20.sp),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.sp),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(16.sp)),
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              height: 250.sp,
+              child: StandartMap(
+                lat: double.tryParse(widget.post!.lat)!,
+                long: double.tryParse(widget.post!.long)!,
+              ),
+            ),
           ),
         ),
       ],

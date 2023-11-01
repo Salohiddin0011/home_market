@@ -1,7 +1,7 @@
 {
  "Let’s Find your\n": "Давай найти твой\n",
  "Favorite Home": "Любимый Дом",
- "Search":"Искать",
+ "Search":"Поиск",
  "Recomendations": "Рекомендации",
  "All": "Все",
  "More": "Более",
@@ -53,11 +53,16 @@
  "Yes": "Да",
  "Delete Account": "Удалить Акаунт",
  "Do you want to delete account?": "Вы хотите удалить Акаунт?",
- "Cancel":"Отменить",
+ "Cancel":"Отмена",
  "Confirm":"Подтвердить",
  "Please confirm password to delete account.": "Пожалуйста подтвердите свой пароль чтобы удалить акаунт",
  "Password":"Пароль",
  "Delete": "Удалить",
- "Update Announcement": "Изменить объявление"
+ "Update Announcement": "Изменить объявление",
+ "Favorite Houses": "Любимые дома",
+ "Available Houses": "Доступные Дома",
+ "Location of the building": "Местонахождение Дома",
+ "Choose location of your house": "Выберите локацию своего дома",
+ "Search Announcements": "Поиск объявлений"
 
 }

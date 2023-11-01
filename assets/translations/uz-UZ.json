@@ -1,7 +1,7 @@
 {
 "Let’s Find your\n": "Keling siz sevgan\n",
  "Favorite Home": "Uyni Topamiz",
- "Search":"Qidiruv",
+ "Search":"Qidirish",
  "Recomendations": "Rekomendatsiya",
  "All": "Hammasi",
  "More": "Ko'proq",
@@ -58,5 +58,10 @@
  "Please confirm password to delete account.": "Iltimos Akauntni o'chirish uchun parolongizni tasdiqlang",
  "Password":"Parol",
  "Delete": "O'chirish",
- "Update Announcement": "Elonni o'zgartirish"
+ "Update Announcement": "Elonni o'zgartirish",
+ "Favorite Houses": "Yoqtirgan uylar",
+ "Available Houses": "Mavjud uylar",
+ "Location of the building": "Uyning lokatsiyasi",
+ "Choose location of your house": "Uyning lokatsiyasini tanlang",
+ "Search Announcements": "Elonlarni qidirish"
 }
