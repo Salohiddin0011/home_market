@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:home_market/services/constants/app_colors.dart';
-import 'package:home_market/services/firebase/util_service.dart';
 import 'package:home_market/views/custom_txt_field.dart';
 
 import '../../services/constants/app_str.dart';

@@ -16,6 +16,8 @@ class Post {
   final String bathrooms;
   final bool isApartment;
   List<String> isLiked;
+  final String lat;
+  final String long;
   //! Facilities
   List<Facilities> facilities;
   final bool isMe;
@@ -26,33 +28,32 @@ class Post {
   final String userName;
   // final String long;
   // final String lat;
-  Post({
-    this.isMe = false,
-    required this.facilities,
-    required this.isLiked,
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.userId,
-    required this.createdAt,
-    required this.comments,
-    required this.area,
-    required this.bathrooms,
-    required this.email,
-    required this.isApartment,
-    required this.phone,
-    required this.price,
-    required this.rooms,
-    required this.gridImages,
-    required this.userName,
-    // required this.lat,
-    // required this.long
-  });
+  Post(
+      {this.isMe = false,
+      required this.facilities,
+      required this.isLiked,
+      required this.id,
+      required this.title,
+      required this.content,
+      required this.userId,
+      required this.createdAt,
+      required this.comments,
+      required this.area,
+      required this.bathrooms,
+      required this.email,
+      required this.isApartment,
+      required this.phone,
+      required this.price,
+      required this.rooms,
+      required this.gridImages,
+      required this.userName,
+      required this.lat,
+      required this.long});
 
   factory Post.fromJson(Map<String, Object?> json, {bool isMe = false}) {
     return Post(
-      // long: json['long'] as String,
-      // lat: json['lat'] as String,
+      long: json['long'] as String,
+      lat: json['lat'] as String,
       userName: json['userName'] as String,
       gridImages: (json['gridImages'] as List).map((e) => e as String).toList(),
       id: json['id'] as String,
@@ -99,7 +100,7 @@ class Post {
         "facilities": facilities.map((e) => e.toJson()).toList(),
         "userName": userName,
         "isLiked": isLiked,
-        // "lat": lat,
-        // "long": long
+        "lat": lat,
+        "long": long
       };
 }

@@ -15,6 +15,8 @@ class CreatePostEvent extends PostEvent {
   final String price;
   final String rooms;
   final List<File?> gridImages;
+  final String lat;
+  final String long;
 
   const CreatePostEvent({
     required this.title,
@@ -27,6 +29,8 @@ class CreatePostEvent extends PostEvent {
     required this.price,
     required this.rooms,
     required this.gridImages,
+    required this.lat,
+    required this.long,
   });
 
   @override
@@ -41,6 +45,8 @@ class CreatePostEvent extends PostEvent {
         rooms,
         gridImages,
         facilities,
+        lat,
+        long,
       ];
 }
 
@@ -75,21 +81,26 @@ class UpdatePostEvent extends PostEvent {
   final List<File?> gridImages;
   final List<String>? imagesUri;
   final List<String> isLiked;
+  final String lat;
+  final String long;
 
-  const UpdatePostEvent(
-      {required this.title,
-      required this.isLiked,
-      required this.content,
-      required this.facilities,
-      required this.area,
-      required this.bathrooms,
-      required this.isApartment,
-      required this.phone,
-      required this.price,
-      required this.rooms,
-      required this.postId,
-      required this.gridImages,
-      required this.imagesUri});
+  const UpdatePostEvent({
+    required this.title,
+    required this.isLiked,
+    required this.content,
+    required this.facilities,
+    required this.area,
+    required this.bathrooms,
+    required this.isApartment,
+    required this.phone,
+    required this.price,
+    required this.rooms,
+    required this.postId,
+    required this.gridImages,
+    required this.imagesUri,
+    required this.lat,
+    required this.long,
+  });
 
   @override
   List<Object?> get props => [
@@ -106,6 +117,8 @@ class UpdatePostEvent extends PostEvent {
         facilities,
         imagesUri,
         isLiked,
+        lat,
+        long,
       ];
 }
 
@@ -123,6 +136,8 @@ class UpdateLikePostEvent extends PostEvent {
   final String price;
   final String rooms;
   final List<String> gridImages;
+  final String lat;
+  final String long;
 
   const UpdateLikePostEvent({
     required this.title,
@@ -137,6 +152,8 @@ class UpdateLikePostEvent extends PostEvent {
     required this.rooms,
     required this.postId,
     required this.gridImages,
+    required this.lat,
+    required this.long,
   });
 
   @override
@@ -153,6 +170,8 @@ class UpdateLikePostEvent extends PostEvent {
         postId,
         gridImages,
         facilities,
+        lat,
+        long,
       ];
 }
 

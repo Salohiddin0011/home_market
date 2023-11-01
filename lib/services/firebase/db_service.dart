@@ -25,6 +25,8 @@ sealed class DBService {
     required String price,
     required String rooms,
     required List<File?> gridImages,
+    required String lat,
+    required String long,
   }) async {
     try {
       final folder = db.ref(Folder.post);
@@ -32,8 +34,6 @@ sealed class DBService {
       final id = child.key!;
       final userId = AuthService.user.uid;
       final userName = AuthService.user.displayName;
-      // final lat = LatLong.lat;
-      // final long = LatLong.long;
 
       List<String> images = [];
 
@@ -42,8 +42,6 @@ sealed class DBService {
         images.add(image);
       }
       final post = Post(
-          // lat: lat.toString(),
-          // long: long.toString(),
           isLiked: ['isLiked'],
           userName: userName!,
           gridImages: images,
@@ -60,7 +58,9 @@ sealed class DBService {
           isApartment: isApartment,
           phone: phone,
           price: price,
-          rooms: rooms);
+          rooms: rooms,
+          lat: lat,
+          long: long);
       await child.set(post.toJson());
       print("created");
       return true;
@@ -90,20 +90,23 @@ sealed class DBService {
     }
   }
 
-  static Future<bool> updatePost(
-      {required String postId,
-      required String title,
-      required String content,
-      required String area,
-      required String bathrooms,
-      required bool isApartment,
-      required String phone,
-      required String price,
-      required String rooms,
-      required List<Facilities> facilities,
-      required List<String> isLiked,
-      required List<File?> gridImages,
-      List<String>? imagesUri}) async {
+  static Future<bool> updatePost({
+    required String postId,
+    required String title,
+    required String content,
+    required String area,
+    required String bathrooms,
+    required bool isApartment,
+    required String phone,
+    required String price,
+    required String rooms,
+    required List<Facilities> facilities,
+    required List<String> isLiked,
+    required List<File?> gridImages,
+    List<String>? imagesUri,
+    required String lat,
+    required String long,
+  }) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
       final userId = AuthService.user.uid;
@@ -117,8 +120,8 @@ sealed class DBService {
       // final lat = LatLong.lat;
       // final long = LatLong.long;
       final post = Post(
-          // lat: lat.toString(),
-          // long: long.toString(),
+          lat: lat,
+          long: long,
           userName: userName!,
           isLiked: isLiked,
           gridImages: imagesUri ?? images,
@@ -145,42 +148,48 @@ sealed class DBService {
     }
   }
 
-  static Future<bool> updateLikePost(
-      {required String postId,
-      required String title,
-      required String content,
-      required String area,
-      required String bathrooms,
-      required bool isApartment,
-      required List<String> isLiked,
-      required String phone,
-      required String price,
-      required String rooms,
-      required List<Facilities> facilities,
-      required List<String> gridImages,
-      List<String>? imagesUri}) async {
+  static Future<bool> updateLikePost({
+    required String postId,
+    required String title,
+    required String content,
+    required String area,
+    required String bathrooms,
+    required bool isApartment,
+    required List<String> isLiked,
+    required String phone,
+    required String price,
+    required String rooms,
+    required List<Facilities> facilities,
+    required List<String> gridImages,
+    List<String>? imagesUri,
+    required String lat,
+    required String long,
+  }) async {
     try {
       final fbPost = db.ref(Folder.post).child(postId);
       final userId = AuthService.user.uid;
 
       final post = Post(
-          userName: AuthService.user.displayName!,
-          gridImages: gridImages,
-          facilities: facilities,
-          id: postId,
-          title: title,
-          content: content,
-          userId: userId,
-          createdAt: DateTime.now(),
-          comments: [],
-          area: area,
-          bathrooms: bathrooms,
-          email: AuthService.user.email!,
-          isApartment: isApartment,
-          isLiked: isLiked,
-          phone: phone,
-          price: price,
-          rooms: rooms);
+        userName: AuthService.user.displayName!,
+        gridImages: gridImages,
+        facilities: facilities,
+        id: postId,
+        title: title,
+        content: content,
+        userId: userId,
+        createdAt: DateTime.now(),
+        comments: [],
+        area: area,
+        bathrooms: bathrooms,
+        email: AuthService.user.email!,
+        isApartment: isApartment,
+        isLiked: isLiked,
+        phone: phone,
+        price: price,
+        rooms: rooms,
+        lat: lat,
+        long: long,
+      );
       await fbPost.update(post.toJson());
 
       return true;

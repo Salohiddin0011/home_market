@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class StandartMap extends StatefulWidget {
   final double lat;
-  final double lang;
-  const StandartMap({super.key, required this.lat, required this.lang});
+  final double long;
+  const StandartMap({super.key, required this.lat, required this.long});
 
   @override
   State<StandartMap> createState() => _StandartMapState();
@@ -17,7 +16,7 @@ class _StandartMapState extends State<StandartMap> {
   @override
   void initState() {
     _cameraPosition = CameraPosition(
-      target: LatLng(widget.lat, widget.lang),
+      target: LatLng(widget.lat, widget.long),
       zoom: 17,
     );
     super.initState();
@@ -32,10 +31,10 @@ class _StandartMapState extends State<StandartMap> {
       zoomControlsEnabled: false,
       markers: {
         Marker(
-          markerId: const MarkerId("1"),
-          infoWindow: const InfoWindow(title: '1'),
+          markerId: const MarkerId(" "),
+          infoWindow: const InfoWindow(title: ' '),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          position: LatLng(widget.lat, widget.lang),
+          position: LatLng(widget.lat, widget.long),
         ),
       },
     );

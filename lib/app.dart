@@ -42,7 +42,8 @@ class HomeMarketApp extends StatelessWidget {
                   initialData: null,
                   stream: AuthService.auth.authStateChanges(),
                   builder: (context, snapshot) {
-                    if (snapshot.data != null) {
+                    if (snapshot.data != null &&
+                        FirebaseAuth.instance.currentUser!.emailVerified) {
                       return const MainPage();
                     } else {
                       return SignInPage();

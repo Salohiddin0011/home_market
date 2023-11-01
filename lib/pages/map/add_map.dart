@@ -17,13 +17,6 @@ class _AddMapState extends State<AddMap> {
     zoom: 17,
   );
 
-  List<MapType> mapType = [
-    MapType.hybrid,
-    MapType.normal,
-    MapType.satellite,
-    MapType.terrain,
-  ];
-
   Marker? origin;
 
   @override
@@ -50,15 +43,14 @@ class _AddMapState extends State<AddMap> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-        mapType: MapType.hybrid,
+        mapType: MapType.normal,
         initialCameraPosition: _cameraPosition,
-        myLocationButtonEnabled: false,
+        myLocationButtonEnabled: true,
+        myLocationEnabled: false,
         zoomControlsEnabled: false,
         onTap: (argument) {
           addMap(argument);
         },
-        markers: origin != null ? {origin!} : {}
-        //onMapCreated: (controller) => _completer = controller,
-        );
+        markers: origin != null ? {origin!} : {});
   }
 }

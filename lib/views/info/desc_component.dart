@@ -52,7 +52,7 @@ class DescriptionComponent extends StatelessWidget {
               color: hiveDb.isLight ? AppColors.ffffffff : AppColors.ff006EFF,
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             ammount,
             style: TextStyle(
@@ -71,7 +71,7 @@ class DescriptionComponent extends StatelessWidget {
                 color: hiveDb.isLight
                     ? AppColors.ffffffff
                     : const Color(0xff6B6B6B)),
-          )
+          ),
         ],
       ),
     );

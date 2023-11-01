@@ -142,6 +142,8 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                                           rooms: widget.post!.rooms,
                                           postId: widget.post!.id,
                                           gridImages: widget.post!.gridImages,
+                                          lat: widget.post!.lat,
+                                          long: widget.post!.long,
                                         ));
                                   },
                                   child: widget.post!.isLiked.contains(
@@ -221,7 +223,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                   child: BlocBuilder<PostBloc, PostState>(
                       builder: (context, state) {
                     return SingleChildScrollView(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -343,7 +345,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                           ///#TabbarView
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            height: MediaQuery.sizeOf(context).height * .7,
+                            height: MediaQuery.sizeOf(context).height,
                             child:
                                 TabBarView(controller: controllerT, children: [
                               ///Description

@@ -10,6 +10,8 @@ import 'package:home_market/views/info/desc_component.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../pages/map/google_map.dart';
+
 // ignore: must_be_immutable
 class DescriptionPage extends StatefulWidget {
   Post? post;
@@ -207,6 +209,22 @@ class _DescriptionPageState extends State<DescriptionPage> {
                   ),
                 ),
             ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              height: 250.sp,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: StandartMap(
+                    lat: double.tryParse(widget.post!.lat)!,
+                    long: double.tryParse(widget.post!.long)!,
+                  )),
+            ),
           ),
         ),
       ],

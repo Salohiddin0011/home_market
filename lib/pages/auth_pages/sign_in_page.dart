@@ -38,7 +38,7 @@ class SignInPage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                      "Email pochtani tekshiring sizga havola jo'natilgan."),
+                      "Email ro'yxatan o'tmagan yo'ki email tasdiqlanmagan. Iltimos email pochtangizni tekshiring."),
                 ),
               );
             }
