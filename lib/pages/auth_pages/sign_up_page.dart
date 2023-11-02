@@ -45,7 +45,7 @@ class SignUpPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => SignInPage(),
+                            builder: (context) => const SignInPage(),
                           ),
                           (route) => false);
                     },
@@ -182,7 +182,7 @@ class SignUpPage extends StatelessWidget {
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                SignInPage()));
+                                                const SignInPage()));
                                   },
                               ),
                             ],

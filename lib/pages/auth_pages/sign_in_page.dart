@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/blocs/auth/auth_bloc.dart';
-import 'package:home_market/blocs/post/post_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/main_page.dart';
 import 'package:home_market/pages/auth_pages/sign_up_page.dart';
@@ -16,11 +15,23 @@ import 'package:home_market/views/loading/loading.dart';
 
 import 'forgot_password_page.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +48,7 @@ class SignInPage extends StatelessWidget {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const MainPage()));
             } else {
+              FirebaseAuth.instance.currentUser!.sendEmailVerification();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
