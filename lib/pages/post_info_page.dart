@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -205,16 +206,20 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                     floating: true,
                     expandedHeight: 280.sp,
                     forceElevated: innerBoxIsScrolled,
-                    flexibleSpace: Container(
-                      height: 280.sp,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(
-                          widget.post!.gridImages[0],
-                        ),
-                      )),
-                    )),
+                    flexibleSpace: CachedNetworkImage(
+                        imageUrl: widget.post!.gridImages[0],
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator.adaptive(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        imageBuilder: (context, imageBuilder) {
+                          return Container(
+                            height: 280.sp,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.fill, image: imageBuilder)),
+                          );
+                        })),
               ),
             ];
           },

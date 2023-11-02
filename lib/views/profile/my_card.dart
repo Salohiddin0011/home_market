@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
@@ -16,6 +17,7 @@ class MyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 10.sp,
       color: !hiveDb.isLight
           ? AppColors.ffffffff
           : AppColors.ff000000.withOpacity(.4),
@@ -27,16 +29,21 @@ class MyCard extends StatelessWidget {
           children: [
             Expanded(
                 flex: 3,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15.sp)),
-                    image: DecorationImage(
-                        image: NetworkImage(
-                          post.gridImages[0],
+                child: CachedNetworkImage(
+                    imageUrl: post.gridImages[0],
+                    placeholder: (context, url) =>
+                        CircularProgressIndicator.adaptive(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.sp)),
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
                         ),
-                        fit: BoxFit.cover),
-                  ),
-                )),
+                      );
+                    })),
             Expanded(
               flex: 7,
               child: Padding(

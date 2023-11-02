@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,6 +80,7 @@ class _MyLikePageState extends State<MyLikePage> {
                                 alignment: Alignment(0.9.sp, -1.sp),
                                 children: [
                                   Card(
+                                    elevation: 10.sp,
                                     margin: EdgeInsets.symmetric(
                                         horizontal: 2.sp, vertical: 5.sp),
                                     color: !hiveDb.isLight
@@ -92,17 +94,26 @@ class _MyLikePageState extends State<MyLikePage> {
                                         children: [
                                           Expanded(
                                               flex: 9,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              15.sp)),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                        post.gridImages[0],
-                                                      ),
-                                                      fit: BoxFit.cover),
+                                              child: CachedNetworkImage(
+                                                imageUrl: post.gridImages[0],
+                                                placeholder: (context, url) =>
+                                                    const CircularProgressIndicator
+                                                        .adaptive(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                                imageBuilder:
+                                                    (context, imageBuilder) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                15.sp)),
+                                                    image: DecorationImage(
+                                                        image: imageBuilder,
+                                                        fit: BoxFit.cover),
+                                                  ),
                                                 ),
                                               )),
                                           Expanded(

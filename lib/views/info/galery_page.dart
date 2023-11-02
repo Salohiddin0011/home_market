@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/models/post_model.dart';
@@ -26,12 +27,18 @@ class _GalleryPageState extends State<GalleryPage> {
               crossAxisCount: 2),
           itemBuilder: (_, i) {
             return ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                widget.post!.gridImages[i],
-                height: 50.sp,
-                width: 50.sp,
-                fit: BoxFit.cover,
+              borderRadius: BorderRadius.circular(5.sp),
+              child: CachedNetworkImage(
+                placeholder: (context, url) =>
+                    CircularProgressIndicator.adaptive(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                imageUrl: widget.post!.gridImages[i],
+                imageBuilder: (context, imageProvider) => Image(
+                  image: imageProvider,
+                  height: 50.sp,
+                  width: 50.sp,
+                  fit: BoxFit.cover,
+                ),
               ),
             );
           }),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,8 @@ class _SearchPageState extends State<SearchPage> {
           appBar: AppBar(
             leading: GestureDetector(
               onTap: () {
-                context.read<MainBloc>().add(GetAllDataEvent());
+                context.read<MainBloc>().add(const GetAllDataEvent());
+                Navigator.pop(context);
               },
               child: Icon(
                   Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
@@ -138,7 +140,6 @@ class _SearchPageState extends State<SearchPage> {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
-              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 5.sp, top: 10.sp, right: 5.sp),
               itemCount: state.items.length,
@@ -153,6 +154,7 @@ class _SearchPageState extends State<SearchPage> {
                     alignment: Alignment(0.9.sp, -1.sp),
                     children: [
                       Card(
+                        elevation: 10.sp,
                         color: !hiveDb.isLight
                             ? AppColors.ffffffff
                             : AppColors.ff000000.withOpacity(.4),
@@ -164,17 +166,24 @@ class _SearchPageState extends State<SearchPage> {
                             children: [
                               Expanded(
                                   flex: 5,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15.sp)),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                            post.gridImages[0],
+                                  child: CachedNetworkImage(
+                                      imageUrl: post.gridImages[0],
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator
+                                              .adaptive(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                      imageBuilder: (context, imageProvider) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.sp)),
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover),
                                           ),
-                                          fit: BoxFit.cover),
-                                    ),
-                                  )),
+                                        );
+                                      })),
                               Expanded(
                                 flex: 2,
                                 child: Padding(

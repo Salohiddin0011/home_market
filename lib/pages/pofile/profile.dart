@@ -8,10 +8,8 @@ import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/pofile/my_announcements.dart';
-import 'package:home_market/services/firebase/auth_service.dart';
-import 'package:home_market/services/firebase/store_service.dart';
 import 'package:home_market/views/profile/user_name_email.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -30,25 +28,10 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-File? file;
-final ImagePicker picker = ImagePicker();
-
 class _ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void getImage() async {
-    final xFile = await picker.pickImage(source: ImageSource.gallery);
-    file = xFile != null ? File(xFile.path) : null;
-    if (file != null) {
-      if (AuthService.user.photoURL != null) {
-        StoreService.removeFile(AuthService.user.photoURL!);
-      }
-      AuthService.user
-          .updatePhotoURL(await StoreService.uploadFile(file!, true));
-    }
   }
 
   //^ to delete showDialog
@@ -405,7 +388,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   const Spacer(flex: 4),
                   //^ user_name_email file
-                  GestureDetector(onTap: getImage, child: UserNameEmail()),
+                  UserNameEmail(),
                   const Spacer(flex: 2),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),

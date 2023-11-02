@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
 
                     if (state is SignOutSuccess) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => SignInPage()));
+                          builder: (context) => const SignInPage()));
                     }
                   },
                 ),
@@ -367,12 +367,20 @@ class _HomePageState extends State<HomePage> {
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(15.sp),
                                               topRight: Radius.circular(15.sp)),
-                                          child: Image(
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(
-                                              post.gridImages[0],
-                                            ),
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, _) =>
+                                                const CircularProgressIndicator
+                                                    .adaptive(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                            imageUrl: post.gridImages[0],
+                                            imageBuilder: (context,
+                                                    imageBuilder) =>
+                                                Image(
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                    image: imageBuilder),
                                           ),
                                         ),
                                       ),
@@ -516,6 +524,7 @@ class _HomePageState extends State<HomePage> {
                                 alignment: Alignment(0.9.sp, -1.sp),
                                 children: [
                                   Card(
+                                    elevation: 7.sp,
                                     color: !hiveDb.isLight
                                         ? AppColors.ffffffff
                                         : AppColors.ff000000.withOpacity(.4),
@@ -527,19 +536,28 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           Expanded(
                                               flex: 3,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              15.sp)),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                        post.gridImages[0],
+                                              child: CachedNetworkImage(
+                                                  placeholder: (context, url) =>
+                                                      const CircularProgressIndicator
+                                                          .adaptive(),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Icon(Icons.error),
+                                                  imageUrl: post.gridImages[0],
+                                                  imageBuilder:
+                                                      (context, imageBuilder) {
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    15.sp)),
+                                                        image: DecorationImage(
+                                                            image: imageBuilder,
+                                                            fit: BoxFit.cover),
                                                       ),
-                                                      fit: BoxFit.cover),
-                                                ),
-                                              )),
+                                                    );
+                                                  })),
                                           Expanded(
                                             flex: 7,
                                             child: Padding(
