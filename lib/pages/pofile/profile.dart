@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_market/blocs/bottom_app_bar/appbar_bloc.dart';
 import 'package:home_market/main.dart';
 import 'package:home_market/pages/auth_pages/sign_in_page.dart';
 import 'package:home_market/pages/pofile/my_announcements.dart';
@@ -353,6 +354,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: TextButton(
                         onPressed: () async {
                           ctx.read<AuthBloc>().add(const SignOutEvent());
+                          context
+                              .read<LandingPageBloc>()
+                              .add(TabChange(tabIndex: 0));
                         },
                         child: Text(
                           "Yes".tr(),

@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_market/blocs/main/main_bloc.dart';
 import 'package:home_market/main.dart';
@@ -18,20 +21,37 @@ class AllHomeMap extends StatefulWidget {
 }
 
 class _AllHomeMapState extends State<AllHomeMap> {
-  CameraPosition? _cameraPosition;
+  late GoogleMapController _completer;
+  CameraPosition _cameraPosition = const CameraPosition(
+    target: LatLng(41.311153, 69.279729),
+    zoom: 10,
+  );
   int i = 0;
+  var icon;
 
   List<MapType> type = [
     MapType.hybrid,
     MapType.normal,
   ];
 
+  void getLocation() async {
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
+    log(position.toString());
+    _cameraPosition = CameraPosition(
+      target: LatLng(position.latitude, position.longitude),
+      zoom: 15,
+    );
+    _completer.animateCamera(
+      CameraUpdate.newCameraPosition(_cameraPosition),
+    );
+  }
+
   @override
   void initState() {
-    _cameraPosition = const CameraPosition(
-      target: LatLng(41.311153, 69.279729),
-      zoom: 10,
-    );
+    getLocation();
     super.initState();
   }
 
@@ -75,9 +95,10 @@ class _AllHomeMapState extends State<AllHomeMap> {
           ),
           body: GoogleMap(
             mapType: type[i],
-            initialCameraPosition: _cameraPosition!,
+            initialCameraPosition: _cameraPosition,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
+            onMapCreated: (controller) => _completer = controller,
             markers: {
               for (int i = 0; i < state.items.length; i++)
                 Marker(
@@ -95,7 +116,8 @@ class _AllHomeMapState extends State<AllHomeMap> {
                         );
                       }),
                   icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueRed),
+                    BitmapDescriptor.hueBlue,
+                  ),
                   position: LatLng(double.tryParse(state.items[i].lat)!,
                       double.tryParse(state.items[i].long)!),
                 ),

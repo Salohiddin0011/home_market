@@ -222,7 +222,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(16.sp)),
             child: SizedBox(
-              width: MediaQuery.sizeOf(context).width,
+              width: double.infinity,
               height: 250.sp,
               child: StandartMap(
                 lat: double.tryParse(widget.post!.lat)!,

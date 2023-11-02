@@ -360,10 +360,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                               GalleryPage(post: widget.post),
 
                               ///Comment
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 185.sp),
-                                child: CommentPage(post: widget.post!),
-                              ),
+                              CommentPage(post: widget.post!),
                             ]),
                           ),
                         ],
@@ -376,55 +373,53 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
         bottomNavigationBar: controllerT.index != 2
             ? BottomAppBar(
                 padding: EdgeInsets.only(left: 10.sp, right: 10.sp, top: 15.sp),
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Total Price".tr(),
-                            style: TextStyle(
-                              color: hiveDb.isLight
-                                  ? AppColors.ffffffff
-                                  : AppColors.ff000000,
-                              fontFamily: I18N.poppins,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Total Price".tr(),
+                          style: TextStyle(
+                            color: hiveDb.isLight
+                                ? AppColors.ffffffff
+                                : AppColors.ff000000,
+                            fontFamily: I18N.poppins,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
                           ),
-                          Text(
-                            "\$${widget.post!.price}",
-                            style: TextStyle(
-                              color: AppColors.ff016FFF,
-                              fontFamily: I18N.poppins,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        ),
+                        Text(
+                          "\$${widget.post!.price}",
+                          style: TextStyle(
+                            color: AppColors.ff016FFF,
+                            fontFamily: I18N.poppins,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.ff016FFF,
-                          ),
-                          child: Text(
-                            "Send message".tr(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.ff016FFF,
+                        ),
+                        child: Text(
+                          "Send message".tr(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               )
             : null,

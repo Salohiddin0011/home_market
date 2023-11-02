@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -40,8 +41,8 @@ class _HomePageState extends State<HomePage> {
             if (state is DeleteAccountSuccess) {
               Navigator.of(context).pop();
               if (ctx.mounted) {
-                Navigator.of(ctx).pushReplacement(
-                    MaterialPageRoute(builder: (context) => SignInPage()));
+                Navigator.of(ctx).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const SignInPage()));
               }
             }
 
@@ -167,16 +168,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 else
-                  CircleAvatar(
-                      radius: 30.sp,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image:
-                                    NetworkImage(AuthService.user.photoURL!))),
-                      )),
+                  CachedNetworkImage(
+                    imageUrl: AuthService.user.photoURL!,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator.adaptive(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                        radius: 30.sp,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover)),
+                        )),
+                  ),
                 SizedBox(width: 25.sp),
               ],
               bottom: PreferredSize(
@@ -326,12 +332,10 @@ class _HomePageState extends State<HomePage> {
                               final post = state.items[index];
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => InfoPage(
-                                                post: post,
-                                              )));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => InfoPage(
+                                            post: post,
+                                          )));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

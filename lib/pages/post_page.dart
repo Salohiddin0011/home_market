@@ -118,9 +118,11 @@ class _CommentPageState extends State<CommentPage> {
         valueListenable: hiveDb.getListenable,
         builder: (context, mode, child) {
           return SizedBox(
-            height: MediaQuery.sizeOf(context).height * .75,
+            height: MediaQuery.sizeOf(context).height * 1.6.sp,
             child: ListView(
+              padding: EdgeInsets.only(bottom: 50.sp, top: 10.sp),
               shrinkWrap: true,
+              primary: true,
               children: [
                 StreamBuilder(
                   stream: DBService.db

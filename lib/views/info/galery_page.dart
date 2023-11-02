@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/models/post_model.dart';
 
 // ignore: must_be_immutable
@@ -14,19 +15,22 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 10.sp),
       child: GridView.builder(
+          shrinkWrap: true,
           primary: true,
           itemCount: widget.post!.gridImages.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 10, crossAxisSpacing: 10, crossAxisCount: 2),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 10.sp,
+              crossAxisSpacing: 10.sp,
+              crossAxisCount: 2),
           itemBuilder: (_, i) {
             return ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Image.network(
                 widget.post!.gridImages[i],
-                height: 50,
-                width: 50,
+                height: 50.sp,
+                width: 50.sp,
                 fit: BoxFit.cover,
               ),
             );

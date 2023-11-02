@@ -58,6 +58,9 @@ class _MyAnnouncementsState extends State<MyAnnouncements> {
           if (state is DeletePostSuccess) {
             context.read<MainBloc>().add(const MyPostEvent());
           }
+          if (state is UpdatePostSuccess) {
+            context.read<MainBloc>().add(const MyPostEvent());
+          }
         },
         child: BlocBuilder<MainBloc, MainState>(
           builder: (context, state) {
