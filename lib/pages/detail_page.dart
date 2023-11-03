@@ -368,13 +368,12 @@ class _DetailPageState extends State<DetailPage> {
                                           facilities: facilities,
                                           facility: Facilities(
                                               icon: facilitiesIcons[i],
-                                              name: facilitiesName[i].tr()),
+                                              name: facilitiesName[i]),
                                           onTap: () {
                                             final Facilities newFacility =
                                                 Facilities(
                                                     icon: facilitiesIcons[i],
-                                                    name:
-                                                        facilitiesName[i].tr());
+                                                    name: facilitiesName[i]);
                                             context.read<PostBloc>().add(
                                                 FacilitiesPostEvent(
                                                     facilities: facilities,

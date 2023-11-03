@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_market/main.dart';
@@ -55,7 +56,7 @@ class FacilitiesContainer extends StatelessWidget {
               color: hiveDb.isLight ? AppColors.ffffffff : null,
             ),
             Text(
-              facility.name,
+              facility.name.tr(),
               style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
