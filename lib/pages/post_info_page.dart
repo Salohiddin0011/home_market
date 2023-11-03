@@ -169,37 +169,6 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                                         ));
                             })),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            right: 10.sp, left: 5.sp, top: 5.sp, bottom: 5.sp),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: hiveDb.isLight
-                              ? AppColors.ff989898.withOpacity(.8)
-                              : AppColors.ffffffff,
-                          boxShadow: const [
-                            BoxShadow(
-                                blurRadius: 2,
-                                offset: Offset(1, 1),
-                                color: Colors.black),
-                          ],
-                        ),
-                        child: Align(
-                          alignment: Alignment(0.4.sp, 0),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0.sp),
-                            child: Icon(
-                              Platform.isIOS
-                                  ? CupertinoIcons.share
-                                  : Icons.share,
-                              size: 25.sp,
-                              color: hiveDb.isLight
-                                  ? AppColors.ffffffff
-                                  : AppColors.ff000000,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                     pinned: true,
                     snap: false,

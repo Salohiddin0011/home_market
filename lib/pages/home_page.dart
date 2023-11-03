@@ -481,7 +481,8 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 10.sp, right: 15.sp),
+                      padding: EdgeInsets.only(
+                          left: 10.sp, right: 15.sp, top: 10.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -492,14 +493,6 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 23.sp,
                               fontWeight: FontWeight.w600,
                             ),
-                          ),
-                          Text(
-                            I18N.more.tr(),
-                            style: TextStyle(
-                                fontFamily: I18N.poppins,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.ff989898),
                           ),
                         ],
                       ),

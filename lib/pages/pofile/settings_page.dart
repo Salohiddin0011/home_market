@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -190,49 +191,85 @@ class _SettingsPageState extends State<SettingsPage> {
                       alignment: Alignment.center,
                       child: GestureDetector(
                         onTap: getImage,
-                        child: CircleAvatar(
-                          radius: 62.sp,
-                          backgroundColor: AppColors.ff016FFF,
-                          child: AuthService.user.photoURL == null
-                              ? Icon(
-                                  Icons.person,
-                                  size: 70.sp,
-                                  color: AppColors.ffffffff,
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  foregroundDecoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: SweepGradient(
-                                      colors: !hiveDb.isLight
-                                          ? [
-                                              AppColors.ffffffff
-                                                  .withOpacity(.3),
-                                              AppColors.ffffffff.withOpacity(.3)
-                                            ]
-                                          : [
-                                              AppColors.ff000000
-                                                  .withOpacity(.2),
-                                              AppColors.ff000000.withOpacity(.2)
-                                            ],
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: !hiveDb.isLight
+                                ? [
+                                    BoxShadow(
+                                      color: AppColors.ff000000.withOpacity(.3),
+                                      blurRadius: 2,
+                                      offset: Offset(2.sp, 2.sp),
+                                    )
+                                  ]
+                                : [
+                                    BoxShadow(
+                                      color: AppColors.ffffffff.withOpacity(.2),
+                                      blurRadius: 2,
+                                      offset: const Offset(2, 2),
+                                    )
+                                  ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 62.sp,
+                            backgroundColor: hiveDb.isLight
+                                ? AppColors.ff000000.withOpacity(.3)
+                                : AppColors.ffffffff,
+                            child: AuthService.user.photoURL == null
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 45.sp,
+                                      color: hiveDb.isLight
+                                          ? AppColors.ffffffff
+                                          : AppColors.ff000000,
                                     ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          AuthService.user.photoURL!),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    size: 45.sp,
-                                    color: hiveDb.isLight
-                                        ? AppColors.ffffffff
-                                        : AppColors.ff000000,
-                                  ),
-                                ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: AuthService.user.photoURL!,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator
+                                            .adaptive(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        alignment: Alignment.center,
+                                        foregroundDecoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: SweepGradient(
+                                            colors: !hiveDb.isLight
+                                                ? [
+                                                    AppColors.ffffffff
+                                                        .withOpacity(.3),
+                                                    AppColors.ffffffff
+                                                        .withOpacity(.3)
+                                                  ]
+                                                : [
+                                                    AppColors.ff000000
+                                                        .withOpacity(.2),
+                                                    AppColors.ff000000
+                                                        .withOpacity(.2)
+                                                  ],
+                                          ),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: imageProvider),
+                                        ),
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          size: 45.sp,
+                                          color: hiveDb.isLight
+                                              ? AppColors.ffffffff
+                                              : AppColors.ff000000,
+                                        ),
+                                      );
+                                    }),
+                          ),
                         ),
                       ),
                     ),
