@@ -9,17 +9,20 @@ class CustomDetailTextField extends StatelessWidget {
   final String title;
   final int maxLines;
   final bool inputFormatter;
+  final TextInputType keyboardType;
   const CustomDetailTextField(
       {Key? key,
       this.inputFormatter = false,
       required this.controller,
       required this.title,
-      required this.maxLines})
+      required this.maxLines,
+      required this.keyboardType})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: keyboardType,
       inputFormatters: inputFormatter
           ? [FilteringTextInputFormatter(RegExp('[0-9]'), allow: true)]
           : null,

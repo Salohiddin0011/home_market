@@ -268,7 +268,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                               : AppColors.ff000000,
                                         ),
                                       );
-                                    }),
+                                    },
+                                  ),
                           ),
                         ),
                       ),

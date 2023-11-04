@@ -221,7 +221,8 @@ class _SearchPageState extends State<SearchPage> {
                                             color: hiveDb.isLight
                                                 ? AppColors.ffffffff
                                                     .withOpacity(.7)
-                                                : const Color(0xff0066ff),
+                                                : AppColors.ff000000
+                                                    .withOpacity(.5),
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),

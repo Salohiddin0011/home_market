@@ -29,9 +29,12 @@ class _GalleryPageState extends State<GalleryPage> {
             return ClipRRect(
               borderRadius: BorderRadius.circular(5.sp),
               child: CachedNetworkImage(
-                placeholder: (context, url) =>
-                    CircularProgressIndicator.adaptive(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                placeholder: (context, url) => SizedBox(
+                    height: 30.sp,
+                    width: 30.sp,
+                    child: const Center(
+                        child: CircularProgressIndicator.adaptive())),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
                 imageUrl: widget.post!.gridImages[i],
                 imageBuilder: (context, imageProvider) => Image(
                   image: imageProvider,

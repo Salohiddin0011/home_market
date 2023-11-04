@@ -368,11 +368,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       .showSnackBar(SnackBar(content: Text(state.message)));
                 }
                 if (state is SignOutSuccess) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => SignInPage(),
-                    ),
-                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => SignInPage(),
+                      ),
+                      (route) => false);
                 }
               },
             )

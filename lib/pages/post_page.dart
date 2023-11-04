@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 
@@ -57,19 +58,32 @@ class _CommentPageState extends State<CommentPage> {
       );
 
   getReceiverView(CustomClipper clipper, BuildContext context, String messenge,
-          String userName, String time) =>
+          String userName, String time, String? imageUrl) =>
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           CircleAvatar(
             radius: 20.sp,
-            child: Text(
-              widget.post.userName.substring(0, 1),
-              style: TextStyle(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            child: imageUrl == null
+                ? Text(
+                    widget.post.userName.substring(0, 1),
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                        ),
+                      );
+                    },
+                  ),
           ),
           ChatBubble(
             clipper: clipper,
@@ -156,12 +170,12 @@ class _CommentPageState extends State<CommentPage> {
                         }
 
                         return getReceiverView(
-                          ChatBubbleClipper2(type: BubbleType.receiverBubble),
-                          context,
-                          msg.message,
-                          msg.username,
-                          "${msg.writtenAt.hour}:${msg.writtenAt.minute}",
-                        );
+                            ChatBubbleClipper2(type: BubbleType.receiverBubble),
+                            context,
+                            msg.message,
+                            msg.username,
+                            "${msg.writtenAt.hour}:${msg.writtenAt.minute}",
+                            AuthService.user.photoURL);
                       },
                     );
                   },

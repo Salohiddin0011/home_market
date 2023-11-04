@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,127 +67,152 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                 handle:
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverAppBar(
+                    automaticallyImplyLeading: false,
                     forceMaterialTransparency: true,
-                    leading: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            left: 12.sp, bottom: 5.sp, top: 5.sp, right: 5.sp),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: hiveDb.isLight
-                              ? AppColors.ff989898
-                              : AppColors.ffffffff,
-                          boxShadow: const [
-                            BoxShadow(
-                                blurRadius: 2,
-                                offset: Offset(1, 1),
-                                color: AppColors.ff000000),
-                          ],
-                        ),
-                        child: Align(
-                          alignment: Platform.isIOS
-                              ? Alignment(0.7.sp, 0)
-                              : Alignment(0.sp, 0),
-                          child: Icon(
-                            Platform.isAndroid
-                                ? Icons.arrow_back
-                                : Icons.arrow_back_ios,
-                            size: 25.sp,
-                            color: hiveDb.isLight
-                                ? AppColors.ffffffff
-                                : AppColors.ff000000.withOpacity(.7),
-                          ),
-                        ),
-                      ),
-                    ),
-                    actions: [
-                      Container(
-                        padding: EdgeInsets.all(8.sp),
-                        margin: EdgeInsets.all(5.sp),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: hiveDb.isLight
-                              ? AppColors.ff989898.withOpacity(.8)
-                              : AppColors.ffffffff,
-                          boxShadow: const [
-                            BoxShadow(
-                                blurRadius: 2,
-                                offset: Offset(1, 1),
-                                color: Colors.black),
-                          ],
-                        ),
-                        child: Align(
-                            alignment: Alignment(0.5.sp, 0),
-                            child: BlocBuilder<PostBloc, PostState>(
-                                builder: (context, state) {
-                              return GestureDetector(
-                                  onTap: () {
-                                    likeCheck(
-                                        FirebaseAuth.instance.currentUser!.uid);
-                                    context
-                                        .read<PostBloc>()
-                                        .add(UpdateLikePostEvent(
-                                          email: widget.post!.email,
-                                          userId: widget.post!.userId,
-                                          userName: widget.post!.userName,
-                                          title: widget.post!.title,
-                                          content: widget.post!.content,
-                                          facilities: widget.post!.facilities,
-                                          area: widget.post!.area,
-                                          bathrooms: widget.post!.bathrooms,
-                                          isApartment: widget.post!.isApartment,
-                                          isLiked: widget.post!.isLiked,
-                                          phone: widget.post!.phone,
-                                          price: widget.post!.price,
-                                          rooms: widget.post!.rooms,
-                                          postId: widget.post!.id,
-                                          gridImages: widget.post!.gridImages,
-                                          lat: widget.post!.lat,
-                                          long: widget.post!.long,
-                                        ));
-                                  },
-                                  child: widget.post!.isLiked.contains(
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                      ? Icon(
-                                          Icons.favorite,
-                                          color: hiveDb.isLight
-                                              ? AppColors.ffffffff
-                                              : Colors.red,
-                                          size: 25.sp,
-                                        )
-                                      : Icon(
-                                          Icons.favorite_outline,
-                                          size: 25.sp,
-                                          color: hiveDb.isLight
-                                              ? AppColors.ffffffff
-                                              : AppColors.ff000000,
-                                        ));
-                            })),
-                      ),
-                    ],
                     pinned: true,
-                    snap: false,
+                    snap: true,
                     floating: true,
                     expandedHeight: 280.sp,
                     forceElevated: innerBoxIsScrolled,
-                    flexibleSpace: CachedNetworkImage(
-                        imageUrl: widget.post!.gridImages[0],
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator.adaptive(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        imageBuilder: (context, imageBuilder) {
-                          return Container(
-                            height: 280.sp,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fill, image: imageBuilder)),
-                          );
-                        })),
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: widget.post!.gridImages[0],
+                            placeholder: (context, url) => SizedBox(
+                                height: 50.sp,
+                                width: 50.sp,
+                                child: const Center(
+                                    child:
+                                        CircularProgressIndicator.adaptive())),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            imageBuilder: (context, imageBuilder) {
+                              return Container(
+                                height: 280.sp,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.fill, image: imageBuilder)),
+                              );
+                            },
+                          ),
+                          SafeArea(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 50.sp,
+                                    padding: EdgeInsets.all(8.sp),
+                                    margin: EdgeInsets.only(
+                                        top: 5.sp, bottom: 5.sp, left: 15.sp),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: hiveDb.isLight
+                                          ? AppColors.ff989898
+                                          : AppColors.ffffffff,
+                                      boxShadow: const [
+                                        BoxShadow(
+                                            blurRadius: 2,
+                                            offset: Offset(1, 1),
+                                            color: AppColors.ff000000),
+                                      ],
+                                    ),
+                                    child: Icon(
+                                      Platform.isAndroid
+                                          ? Icons.arrow_back
+                                          : Icons.arrow_back_ios_new_outlined,
+                                      size: 25.sp,
+                                      color: hiveDb.isLight
+                                          ? AppColors.ffffffff
+                                          : AppColors.ff000000.withOpacity(.7),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 50.sp,
+                                  padding: EdgeInsets.all(8.sp),
+                                  margin: EdgeInsets.only(
+                                      top: 5.sp, bottom: 5.sp, right: 15.sp),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: hiveDb.isLight
+                                        ? AppColors.ff989898.withOpacity(.8)
+                                        : AppColors.ffffffff,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 2,
+                                          offset: Offset(1, 1),
+                                          color: Colors.black),
+                                    ],
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment(0.5.sp, 0),
+                                    child: BlocBuilder<PostBloc, PostState>(
+                                      builder: (context, state) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            likeCheck(FirebaseAuth
+                                                .instance.currentUser!.uid);
+                                            context
+                                                .read<PostBloc>()
+                                                .add(UpdateLikePostEvent(
+                                                  email: widget.post!.email,
+                                                  userId: widget.post!.userId,
+                                                  userName:
+                                                      widget.post!.userName,
+                                                  title: widget.post!.title,
+                                                  content: widget.post!.content,
+                                                  facilities:
+                                                      widget.post!.facilities,
+                                                  area: widget.post!.area,
+                                                  bathrooms:
+                                                      widget.post!.bathrooms,
+                                                  isApartment:
+                                                      widget.post!.isApartment,
+                                                  isLiked: widget.post!.isLiked,
+                                                  phone: widget.post!.phone,
+                                                  price: widget.post!.price,
+                                                  rooms: widget.post!.rooms,
+                                                  postId: widget.post!.id,
+                                                  gridImages:
+                                                      widget.post!.gridImages,
+                                                  lat: widget.post!.lat,
+                                                  long: widget.post!.long,
+                                                ));
+                                          },
+                                          child: widget.post!.isLiked.contains(
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.uid)
+                                              ? Icon(
+                                                  Icons.favorite,
+                                                  color: hiveDb.isLight
+                                                      ? AppColors.ffffffff
+                                                      : Colors.red,
+                                                  size: 25.sp,
+                                                )
+                                              : Icon(
+                                                  Icons.favorite_outline,
+                                                  size: 25.sp,
+                                                  color: hiveDb.isLight
+                                                      ? AppColors.ffffffff
+                                                      : AppColors.ff000000,
+                                                ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
               ),
             ];
           },
@@ -322,7 +346,7 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
                           ///#TabbarView
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            height: MediaQuery.sizeOf(context).height,
+                            height: MediaQuery.sizeOf(context).height * 1.1,
                             child:
                                 TabBarView(controller: controllerT, children: [
                               ///Description

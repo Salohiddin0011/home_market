@@ -292,6 +292,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 10.sp),
                               CustomDetailTextField(
+                                keyboardType: TextInputType.name,
                                 controller: titleController,
                                 title: "Title".tr(),
                                 maxLines: 2,
@@ -313,6 +314,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 10.sp),
                               CustomDetailTextField(
+                                keyboardType: TextInputType.name,
                                 controller: contentController,
                                 title: "Content".tr(),
                                 maxLines: 10,
@@ -430,6 +432,7 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               SizedBox(height: 15.sp),
                               CustomDetailTextField(
+                                keyboardType: TextInputType.datetime,
                                 inputFormatter: true,
                                 controller: phoneCtrl,
                                 title: "Enter your Phone Number".tr(),
@@ -599,5 +602,18 @@ class _DetailPageState extends State<DetailPage> {
             }),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    contentController.dispose();
+    titleController.dispose();
+    phoneCtrl.dispose();
+    areaController.dispose();
+    roomsController.dispose();
+    bathRoomsController.dispose();
+    priceController.dispose();
+
+    super.dispose();
   }
 }

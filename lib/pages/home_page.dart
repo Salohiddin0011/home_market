@@ -31,89 +31,6 @@ class _HomePageState extends State<HomePage> {
     context.read<MainBloc>().add(const GetAllDataEvent());
   }
 
-  void showWarningDialog(BuildContext ctx) {
-    final controller = TextEditingController();
-    showDialog(
-      context: ctx,
-      builder: (context) {
-        return BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is DeleteAccountSuccess) {
-              Navigator.of(context).pop();
-              if (ctx.mounted) {
-                Navigator.of(ctx).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const SignInPage()));
-              }
-            }
-
-            if (state is AuthFailure) {
-              Navigator.of(context).pop();
-              Navigator.of(ctx).pop();
-            }
-          },
-          builder: (context, state) {
-            return Stack(
-              children: [
-                AlertDialog(
-                  title: const Text(I18N.deleteAccount),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(state is DeleteConfirmSuccess
-                          ? I18N.requestPassword
-                          : I18N.deleteAccountWarning),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      if (state is DeleteConfirmSuccess)
-                        TextField(
-                          controller: controller,
-                          decoration:
-                              const InputDecoration(hintText: I18N.password),
-                        ),
-                    ],
-                  ),
-                  actionsAlignment: MainAxisAlignment.spaceBetween,
-                  actions: [
-                    /// #cancel
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(I18N.cancel),
-                    ),
-
-                    /// #confirm #delete
-                    ElevatedButton(
-                      onPressed: () {
-                        if (state is DeleteConfirmSuccess) {
-                          context
-                              .read<AuthBloc>()
-                              .add(DeleteAccountEvent(controller.text.trim()));
-                        } else {
-                          context
-                              .read<AuthBloc>()
-                              .add(const DeleteConfirmEvent());
-                        }
-                      },
-                      child: Text(state is DeleteConfirmSuccess
-                          ? I18N.delete
-                          : I18N.confirm),
-                    ),
-                  ],
-                ),
-                if (state is AuthLoading)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  )
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   bool enabled = true;
   bool like = false;
   @override
@@ -337,120 +254,194 @@ class _HomePageState extends State<HomePage> {
                                             post: post,
                                           )));
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: hiveDb.isLight
-                                        ? AppColors.ff000000.withOpacity(.2)
-                                        : AppColors.ffffffff,
-                                    borderRadius: BorderRadius.circular(15.sp),
-                                    boxShadow: [
-                                      hiveDb.isLight
-                                          ? BoxShadow(
-                                              blurRadius: 4.sp,
-                                              offset: Offset(2.sp, 2.sp),
-                                              color: AppColors.ffffffff,
-                                              blurStyle: BlurStyle.outer)
-                                          : BoxShadow(
-                                              blurRadius: 4.sp,
-                                              offset: Offset(2.sp, 2.sp),
-                                              color: AppColors.ff000000
-                                                  .withOpacity(.3),
-                                            ),
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(right: 20.sp),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(15.sp),
-                                              topRight: Radius.circular(15.sp)),
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, _) =>
-                                                const CircularProgressIndicator
-                                                    .adaptive(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                            imageUrl: post.gridImages[0],
-                                            imageBuilder: (context,
-                                                    imageBuilder) =>
-                                                Image(
-                                                    width: double.infinity,
-                                                    fit: BoxFit.cover,
-                                                    image: imageBuilder),
-                                          ),
-                                        ),
+                                child: Stack(
+                                  alignment: Alignment(0.8.sp, -1.sp),
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: hiveDb.isLight
+                                            ? AppColors.ff000000.withOpacity(.2)
+                                            : AppColors.ffffffff,
+                                        borderRadius:
+                                            BorderRadius.circular(15.sp),
+                                        boxShadow: [
+                                          hiveDb.isLight
+                                              ? BoxShadow(
+                                                  blurRadius: 4.sp,
+                                                  offset: Offset(2.sp, 2.sp),
+                                                  color: AppColors.ffffffff,
+                                                  blurStyle: BlurStyle.outer)
+                                              : BoxShadow(
+                                                  blurRadius: 4.sp,
+                                                  offset: Offset(2.sp, 2.sp),
+                                                  color: AppColors.ff000000
+                                                      .withOpacity(.3),
+                                                ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15.sp,
-                                              right: 15.sp,
-                                              bottom: 5.sp),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  post.title,
-                                                  style: TextStyle(
-                                                    fontFamily: I18N.inter,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 18.sp,
-                                                    color: hiveDb.isLight
-                                                        ? AppColors.ffffffff
-                                                            .withOpacity(.9)
-                                                        : AppColors.ff122D4D,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                      margin: EdgeInsets.only(right: 20.sp),
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(15.sp),
+                                                  topRight:
+                                                      Radius.circular(15.sp)),
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, _) =>
+                                                    SizedBox(
+                                                  height: 40.sp,
+                                                  width: 40.sp,
+                                                  child: const Center(
+                                                    child:
+                                                        CircularProgressIndicator
+                                                            .adaptive(),
                                                   ),
                                                 ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                                imageUrl: post.gridImages[0],
+                                                imageBuilder: (context,
+                                                        imageBuilder) =>
+                                                    Image(
+                                                        width: double.infinity,
+                                                        fit: BoxFit.cover,
+                                                        image: imageBuilder),
                                               ),
-                                              Expanded(
-                                                child: Text(
-                                                  post.content,
-                                                  style: TextStyle(
-                                                    fontFamily: I18N.inter,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14.sp,
-                                                    color: hiveDb.isLight
-                                                        ? AppColors.ffffffff
-                                                            .withOpacity(.7)
-                                                        : AppColors.ff415770,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      '\$${post.price}',
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15.sp,
+                                                  right: 15.sp,
+                                                  bottom: 5.sp),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      post.title,
                                                       style: TextStyle(
-                                                        fontSize: 12.sp,
+                                                        fontFamily: I18N.inter,
                                                         fontWeight:
-                                                            FontWeight.w800,
-                                                        color:
-                                                            AppColors.ff016FFF,
+                                                            FontWeight.w600,
+                                                        fontSize: 18.sp,
+                                                        color: hiveDb.isLight
+                                                            ? AppColors.ffffffff
+                                                                .withOpacity(.9)
+                                                            : AppColors
+                                                                .ff122D4D,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      post.content,
+                                                      style: TextStyle(
+                                                        fontFamily: I18N.inter,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14.sp,
+                                                        color: hiveDb.isLight
+                                                            ? AppColors.ffffffff
+                                                                .withOpacity(.7)
+                                                            : AppColors
+                                                                .ff415770,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          '\$${post.price}',
+                                                          style: TextStyle(
+                                                            fontSize: 12.sp,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            color: AppColors
+                                                                .ff016FFF,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.sp, vertical: 5.sp),
+                                      decoration: BoxDecoration(
+                                          color: hiveDb.isLight
+                                              ? AppColors.ff415770
+                                                  .withOpacity(.9)
+                                              : AppColors.ffffffff,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(20.sp),
+                                          ),
+                                          boxShadow: !hiveDb.isLight
+                                              ? [
+                                                  BoxShadow(
+                                                    blurRadius: 2,
+                                                    offset: const Offset(1, 1),
+                                                    color: AppColors.ff000000
+                                                        .withOpacity(.2),
+                                                  ),
+                                                  BoxShadow(
+                                                    blurRadius: 2,
+                                                    offset:
+                                                        const Offset(-1, -1),
+                                                    color: AppColors.ff000000
+                                                        .withOpacity(.1),
+                                                  ),
+                                                ]
+                                              : [
+                                                  BoxShadow(
+                                                    blurRadius: 4,
+                                                    offset: const Offset(1, 1),
+                                                    color: AppColors.ffffffff
+                                                        .withOpacity(.7),
+                                                  ),
+                                                  BoxShadow(
+                                                    blurRadius: 4,
+                                                    offset:
+                                                        const Offset(-1, -1),
+                                                    color: AppColors.ffffffff
+                                                        .withOpacity(.7),
+                                                  ),
+                                                ]),
+                                      child: Text(
+                                        post.isApartment
+                                            ? I18N.apartment.tr()
+                                            : I18N.house.tr(),
+                                        style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: I18N.poppins,
+                                            color: hiveDb.isLight
+                                                ? AppColors.ffffffff
+                                                : AppColors.ff478FF1),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -499,7 +490,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Stack(
                       children: [
-                        ListView.builder(
+                        ListView.separated(
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: 20.sp,
+                          ),
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           padding: EdgeInsets.only(
@@ -531,8 +525,15 @@ class _HomePageState extends State<HomePage> {
                                               flex: 3,
                                               child: CachedNetworkImage(
                                                   placeholder: (context, url) =>
-                                                      const CircularProgressIndicator
-                                                          .adaptive(),
+                                                      SizedBox(
+                                                        height: 35.sp,
+                                                        width: 20.sp,
+                                                        child: const Center(
+                                                          child:
+                                                              CircularProgressIndicator
+                                                                  .adaptive(),
+                                                        ),
+                                                      ),
                                                   errorWidget: (context, url,
                                                           error) =>
                                                       const Icon(Icons.error),
@@ -634,7 +635,7 @@ class _HomePageState extends State<HomePage> {
                                         horizontal: 10.sp, vertical: 5.sp),
                                     decoration: BoxDecoration(
                                         color: hiveDb.isLight
-                                            ? AppColors.ff000000.withOpacity(.4)
+                                            ? AppColors.ff415770.withOpacity(.9)
                                             : AppColors.ffffffff,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(20.sp),
@@ -656,18 +657,17 @@ class _HomePageState extends State<HomePage> {
                                               ]
                                             : [
                                                 BoxShadow(
-                                                    blurRadius: 4,
-                                                    offset: const Offset(1, 1),
-                                                    color: AppColors.ffffffff
-                                                        .withOpacity(.7),
-                                                    blurStyle: BlurStyle.outer),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(1, 1),
+                                                  color: AppColors.ffffffff
+                                                      .withOpacity(.2),
+                                                ),
                                                 BoxShadow(
-                                                    blurRadius: 4,
-                                                    offset:
-                                                        const Offset(-1, -1),
-                                                    color: AppColors.ffffffff
-                                                        .withOpacity(.7),
-                                                    blurStyle: BlurStyle.outer),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(-1, -1),
+                                                  color: AppColors.ffffffff
+                                                      .withOpacity(.2),
+                                                ),
                                               ]),
                                     child: Text(
                                       post.isApartment
@@ -677,7 +677,9 @@ class _HomePageState extends State<HomePage> {
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,
                                           fontFamily: I18N.poppins,
-                                          color: AppColors.ff478FF1),
+                                          color: hiveDb.isLight
+                                              ? AppColors.ffffffff
+                                              : AppColors.ff478FF1),
                                     ),
                                   ),
                                 ],

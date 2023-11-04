@@ -77,12 +77,12 @@ class _MyLikePageState extends State<MyLikePage> {
                                 }
                               },
                               child: Stack(
-                                alignment: Alignment(0.9.sp, -1.sp),
+                                alignment: Alignment(0.9.sp, -0.8.sp),
                                 children: [
                                   Card(
                                     elevation: 10.sp,
                                     margin: EdgeInsets.symmetric(
-                                        horizontal: 2.sp, vertical: 5.sp),
+                                        horizontal: 2.sp, vertical: 20.sp),
                                     color: !hiveDb.isLight
                                         ? AppColors.ffffffff
                                         : AppColors.ff000000.withOpacity(.4),
